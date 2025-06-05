@@ -1,0 +1,17 @@
+package com.pdm_proyecto.kolny.data.models
+
+import java.util.Date
+
+data class Usuario(
+    /*por aca debe estar la foto*/
+    val dui: String,
+    val nombre: String,
+    val telefono: String,
+    val fechaNacimiento: Date,
+    val casa: String,
+    val email: String,
+    val password: String,
+    val activo: Boolean = false,
+    val rol: String,
+    val tipoAdmin: String?,
+)
