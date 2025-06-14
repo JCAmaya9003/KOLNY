@@ -1,4 +1,4 @@
-package com.pdm_proyecto.kolny.ui.screens
+package com.pdm_proyecto.kolny.ui.screens.admin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -6,19 +6,19 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,14 +39,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.pdm_proyecto.kolny.R
 import com.pdm_proyecto.kolny.data.models.Usuario
-import com.pdm_proyecto.kolny.ui.utils.formatDate
+import com.pdm_proyecto.kolny.utils.formatDate
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,21 +59,37 @@ fun AdminUserScreen(viewModel: UsuarioViewModel) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
+                .padding(top = 16.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Registro de usuarios",
+                    fontSize = 24.sp
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(Icons.Default.Person, contentDescription = "Usuario")
+            }
             Button(
                 onClick = {
                     /*ir a la screen para agregar usuarios*/
                 },
-                modifier = Modifier
-                    .padding(8.dp),
             ) {
-                Text("Agregar usuarios")
+                Text("Agregar Usuario")
             }
             LazyColumn {
                 items(usuarios.size) { index ->
-                    UserCard(usuario = usuarios[index])
+                    UserCard(
+                        usuario = usuarios[index],
+                        onDelete = { viewModel.deleteUsuario(usuarios[index]) },
+                    )
                 }
             }
         }
@@ -83,7 +98,8 @@ fun AdminUserScreen(viewModel: UsuarioViewModel) {
 
 @Composable
 fun UserCard(
-    usuario: Usuario
+    usuario: Usuario,
+    onDelete: () -> Unit = {},
 ) {
     Card(
         modifier = Modifier
@@ -94,39 +110,74 @@ fun UserCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .padding(16.dp)
-        ) {
-            //esta va a ser la imagen del usuario
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = "Usuario",
-                contentScale = ContentScale.Crop,
+                .padding(4.dp)
+        ){
+            Row(
                 modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Column(
-                modifier = Modifier.weight(1f)
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.Center,
             ) {
-                UserInfoRow(label = "Nombre:", value = usuario.nombre)
-                UserInfoRow(label = "Teléfono:", value = usuario.telefono)
-                UserInfoRow(label = "Fecha de\nnacimiento:", value = formatDate(usuario.fechaNacimiento))
-                UserInfoRow(label = "Correo\nElectrónico:", value = usuario.email)
-                UserInfoRow(label = "DUI:", value = usuario.dui)
-                UserInfoRow(label = "Número de\ncasa:", value = usuario.casa)
+                Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = "Usuario",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .background(Color.Gray),
+                )
             }
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Column(
-                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .fillMaxWidth()
+            ) {
+                UserInfo(label = "Nombre:", value = usuario.nombre)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    UserInfo(
+                        label = "DUI:",
+                        value = usuario.dui,
+                        modifier = Modifier.weight(1f)
+                    )
+                    UserInfo(
+                        label = "Número de casa:",
+                        value = usuario.casa,
+                        modifier = Modifier.weight(1.4f)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    UserInfo(
+                        label = "Teléfono:",
+                        value = usuario.telefono,
+                        modifier = Modifier.weight(1f)
+                    )
+                    UserInfo(
+                        label = "Fecha de nacimiento:",
+                        value = formatDate(usuario.fechaNacimiento),
+                        modifier = Modifier.weight(1.4f)
+                    )
+                }
+                UserInfo(label = "Correo Electrónico:", value = usuario.email)
+            }
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
                 IconButton(onClick = { /*ir a la screen de editar*/ }) {
                     Icon(Icons.Default.Edit, contentDescription = "Editar")
                 }
-                IconButton(onClick = { /*eliminar*/ } ) {
+                IconButton(onClick = onDelete) {
                     Icon(
                         Icons.Default.Delete,
                         contentDescription = "Eliminar",
@@ -139,20 +190,19 @@ fun UserCard(
 }
 
 @Composable
-fun UserInfoRow(label: String, value: String) {
-    Row(
-        modifier = Modifier
-            .padding(vertical = 2.dp),
-        verticalAlignment = Alignment.CenterVertically,
+fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .padding(4.dp)
     ) {
         Text(
             text = label,
             fontStyle = FontStyle.Italic,
             color = Color.Gray,
-            modifier = Modifier.width(80.dp)
         )
         Text( text = value )
     }
+    Spacer(modifier = Modifier.height(4.dp))
 }
 
 @Preview

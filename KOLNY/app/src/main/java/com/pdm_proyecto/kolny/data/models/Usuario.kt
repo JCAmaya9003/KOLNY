@@ -11,7 +11,7 @@ data class Usuario(
     val casa: String,
     val email: String,
     val password: String,
-    val activo: Boolean = false,
-    val rol: String,
-    val tipoAdmin: String?,
+    val activo: Boolean = true,
+    val rol: String = "USUARIO",
+    val tipoAdmin: String? = null,
 )

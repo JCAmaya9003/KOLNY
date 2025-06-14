@@ -4,44 +4,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
+import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
+import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModelFactory
 
+//ESTA ASÍ PARA PRUEBAS
+//FALTA NAVIGATION
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val usuarioViewModel: UsuarioViewModel by viewModels {
+            UsuarioViewModelFactory()
+        }
         enableEdgeToEdge()
         setContent {
             KOLNYTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AdminAddUserScreen(usuarioViewModel = usuarioViewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    KOLNYTheme {
-        Greeting("Android")
     }
 }

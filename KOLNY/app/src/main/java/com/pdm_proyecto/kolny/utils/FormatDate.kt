@@ -1,4 +1,4 @@
-package com.pdm_proyecto.kolny.ui.utils
+package com.pdm_proyecto.kolny.utils
 
 import java.text.SimpleDateFormat
 import java.util.Date

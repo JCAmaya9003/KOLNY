@@ -21,7 +21,8 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     fun loadUsuarios() {
         viewModelScope.launch {
             try {
-                _usuarios.value = repository.getAllUsuarios()
+                /*poner aquí el dao para cargar los usuarios*/
+                _usuarios.value = repository.getAllUsuarios().toList()
             }
             catch (e: Exception) {
                 e.printStackTrace()
@@ -33,14 +34,14 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     fun addUsuario(usuario: Usuario) {
         viewModelScope.launch {
             try {
-                /*porner aquí el dao para agregar*/
-                repository.addUsuario(usuario)
-                _usuarios.value = repository.getAllUsuarios()
+                //aquí poner el dao, para agregar el usuario
+                _usuarios.value = repository.addUsuario(usuario).toList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
+
 
     fun editUsuario(usuario: Usuario) {
         viewModelScope.launch {

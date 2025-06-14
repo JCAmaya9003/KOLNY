@@ -1,4 +1,5 @@
 //BORRAR CUANDO ESTE EL DAO
+//SOLO ES TEMPORAL
 
 package com.pdm_proyecto.kolny.data.repository
 
@@ -108,8 +109,9 @@ class UsuarioRepository() {
 
     fun getAllUsuarios() : List<Usuario> = usuarios
 
-    fun addUsuario(usuario: Usuario) {
+    fun addUsuario(usuario: Usuario): List<Usuario> {
         usuarios.add(usuario)
+        return usuarios.toList() //que el dao devuelva la lista de usuarios actualizada
     }
 
     fun getUsuarioByDui(dui: String) : Usuario? = usuarios.find { it.dui == dui }
