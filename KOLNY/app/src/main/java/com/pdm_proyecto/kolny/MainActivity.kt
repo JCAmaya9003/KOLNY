@@ -5,23 +5,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.navigation.compose.rememberNavController
+import com.pdm_proyecto.kolny.ui.navigation.AdminUserNavigation
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModelFactory
 
 //ESTA ASÍ PARA PRUEBAS
-//FALTA NAVIGATION
+//Navigation MUY básica
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val usuarioViewModel: UsuarioViewModel by viewModels {
-            UsuarioViewModelFactory()
-        }
         enableEdgeToEdge()
         setContent {
             KOLNYTheme {
-                AdminAddUserScreen(usuarioViewModel = usuarioViewModel)
+                val navController = rememberNavController()
+                AdminUserNavigation(navController = navController)
             }
         }
     }

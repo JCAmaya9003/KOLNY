@@ -14,6 +14,17 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     private val _usuarios = MutableStateFlow<List<Usuario>>(emptyList())
     val usuarios: StateFlow<List<Usuario>> = _usuarios
 
+    private val _selectedUsuario = MutableStateFlow<Usuario?>(null)
+    val selectedUsuario: StateFlow<Usuario?> = _selectedUsuario
+
+    fun selectUsuario(usuario: Usuario) {
+        _selectedUsuario.value = usuario
+    }
+
+    fun clearSelectedUsuario() {
+        _selectedUsuario.value = null
+    }
+
     init {
         loadUsuarios()
     }

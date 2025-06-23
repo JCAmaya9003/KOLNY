@@ -44,17 +44,24 @@ import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.utils.formatDate
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminUserScreen(viewModel: UsuarioViewModel) {
+fun AdminUserScreen(
+    viewModel: UsuarioViewModel,
+    navController: NavHostController,
+    onAddUser: () -> Unit = {},
+    onEditUser: (Usuario) -> Unit = {}
+) {
 
     val usuarios by viewModel.usuarios.collectAsState()
 
     Scaffold (
-        topBar = { KolnyTopBar(rol = "ADMIN") }
+        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) }
     ){ innerPadding ->
         Column(
             modifier = Modifier
@@ -78,9 +85,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel) {
                 Icon(Icons.Default.Person, contentDescription = "Usuario")
             }
             Button(
-                onClick = {
-                    /*ir a la screen para agregar usuarios*/
-                },
+                onClick = { onAddUser() },
             ) {
                 Text("Agregar Usuario")
             }
@@ -89,6 +94,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel) {
                     UserCard(
                         usuario = usuarios[index],
                         onDelete = { viewModel.deleteUsuario(usuarios[index]) },
+                        onEditUser = { onEditUser(usuarios[index]) }
                     )
                 }
             }
@@ -100,6 +106,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel) {
 fun UserCard(
     usuario: Usuario,
     onDelete: () -> Unit = {},
+    onEditUser: (Usuario) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -174,7 +181,7 @@ fun UserCard(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                IconButton(onClick = { /*ir a la screen de editar*/ }) {
+                IconButton(onClick = { onEditUser(usuario) }) {
                     Icon(Icons.Default.Edit, contentDescription = "Editar")
                 }
                 IconButton(onClick = onDelete) {
@@ -208,5 +215,5 @@ fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun AdminUserPreview() {
-    AdminUserScreen(viewModel = UsuarioViewModel(UsuarioRepository()))
+    AdminUserScreen(viewModel = UsuarioViewModel(UsuarioRepository()), navController = NavHostController(LocalContext.current))
 }

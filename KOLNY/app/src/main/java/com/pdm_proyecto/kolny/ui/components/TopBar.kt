@@ -29,19 +29,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.R
 
 //SOLO PARA PROBAR
 //luego mejorar lógica(para filtro de roles) y logos
 //logos, cambiarlos en el drawable
 @Composable
-fun KolnyTopBar(rol: String?) {
+fun KolnyTopBar(
+    rol: String,
+    navController: NavHostController
+) {
     Surface(
         color = Color(0xFFD0F1FF),
         shadowElevation = 4.dp,
@@ -84,7 +89,9 @@ fun KolnyTopBar(rol: String?) {
                     .fillMaxWidth()
             ) {
                 if(rol === "ADMIN") {
-                    IconButton(onClick = { /*dirigiir a pantalla de CRUD*/ }) {
+                    IconButton(onClick = {
+                        navController.navigate("adminUserScreen")
+                    }) {
                         Icon(Icons.Default.Person, contentDescription = "Perfiles")
                     }
                 }
@@ -109,7 +116,7 @@ fun KolnyTopBar(rol: String?) {
 @Composable
 fun TopBarPreview() {
     Scaffold(
-        topBar = {KolnyTopBar(rol = "VIGILANTE")}
+        topBar = { KolnyTopBar(rol = "VIGILANTE", navController = NavHostController(LocalContext.current)) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
