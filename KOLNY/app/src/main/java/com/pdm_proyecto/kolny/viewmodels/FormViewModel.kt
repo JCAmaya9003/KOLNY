@@ -67,109 +67,73 @@ class FormViewModel : ViewModel() {
         fields: List<String>,
         optionalFields: List<String> = emptyList()
     ): Boolean {
-        Log.d("VALIDATE", "entro aquí")
-
+        Log.d("VALIDATE", "entro aca")
         _errors.clear()
 
-        //para inputs normales
         for (key in fields) {
             val value = _textFields[key]
+            val isOptional = key in optionalFields
+
+            if (value.isNullOrBlank()) {
+                _errors[key] = if (isOptional) null else "Este campo es obligatorio"
+                continue
+            }
+
             when {
-                key in optionalFields && value.isNullOrBlank() -> {
-                    _errors[key] = null
-                }
-
-                value.isNullOrBlank() -> {
-                    _errors[key] = "Este campo es obligatorio"
-                }
-
                 key.contains("correo") && !Patterns.EMAIL_ADDRESS.matcher(value).matches() -> {
                     _errors[key] = "Correo inválido"
                 }
 
                 key.contains("password") -> {
-                    when {
-                        value.length < 8 -> {
-                            _errors[key] = "La contraseña debe tener al menos 8 caracteres"
-                        }
-
-                        value.contains(" ") -> {
-                            _errors[key] = "La contraseña no puede contener espacios"
-                        }
-
-                        else -> _errors[key] = null
+                    _errors[key] = when {
+                        value.length < 8 -> "La contraseña debe tener al menos 8 caracteres"
+                        value.contains(" ") -> "La contraseña no puede contener espacios"
+                        else -> null
                     }
                 }
 
-                else -> {
-                    _errors[key] = null
-                }
+                else -> _errors[key] = null
             }
         }
 
-        //para inputs con formato
         for ((key, field) in _formattedTextFields) {
             val value = field.text
-            when {
-                key in optionalFields && value.isBlank() -> {
-                    _errors[key] = null
-                }
+            val isOptional = key in optionalFields
 
-                value.isBlank() -> {
-                    _errors[key] = "Este campo formateado es obligatorio"
-                }
+            if (value.isBlank()) {
+                _errors[key] = if (isOptional) null else "Este campo es obligatorio"
+                continue
+            }
 
-                key.contains("telefono") && !value.matches(Regex("""\d{4}-\d{4}""")) -> {
-                    _errors[key] = "Teléfono inválido"
-                }
-
-                //aca falta la validacion de ver si hay otros duis iguales
-                key.contains("dui") && !value.matches(Regex("""\d{8}-\d""")) -> {
-                    _errors[key] = "DUI inválido"
-                }
-
-                else -> {
-                    _errors[key] = null
-                }
+            _errors[key] = when {
+                key.contains("telefono") && !value.matches(Regex("""\d{4}-\d{4}""")) -> "Teléfono inválido"
+                key.contains("dui") && !value.matches(Regex("""\d{8}-\d""")) -> "DUI inválido"
+                else -> null
             }
         }
 
-        //para fechas
-        for (key in fields.filter { it.contains("fecha", ignoreCase = true) }) {
-            val date = _dateFields[key]
+        for ((key, date) in _dateFields) {
+            val isOptional = key in optionalFields
+
+            if (date == null && !isOptional) {
+                _errors[key] = "Este campo es obligatorio"
+                continue
+            }
 
             when {
-                key in optionalFields && date == null -> {
-                    _errors[key] = null
-                }
-
-                date == null -> {
-                    _errors[key] = "Este campo es obligatorio"
-                }
-
-                key.contains("fechaNacimiento") && date > Date() -> {
+                key.contains("fechaNacimiento") && date.after(Date()) ->
                     _errors[key] = "Fecha de nacimiento inválida"
-                }
-
-                key.contains("fechaEvento") && date <= Date() -> {
+                key.contains("fechaEvento") && date.before(Date()) ->
                     _errors[key] = "Fecha de evento inválida"
-                }
-
-                else -> {
-                    _errors[key] = null
-                }
+                else -> _errors[key] = null
             }
         }
 
-        //aca es para logs por si alguna validación falla en algún punto
-        Log.d("VALIDATE", "errores:")
         _errors.forEach { (key, error) ->
             if (error != null) Log.d("VALIDATE", "$key - $error")
         }
 
-        val isValid = _errors.none { it.value != null }
-
-        return isValid
+        return _errors.none { it.value != null }
     }
 
 }

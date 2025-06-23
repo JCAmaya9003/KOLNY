@@ -32,9 +32,3 @@ fun AdminAddUserScreen(viewModel: UsuarioViewModel, navController: NavHostContro
         }
     }
 }
-
-@Preview
-@Composable
-fun FormScreenPreview() {
-    AdminAddUserScreen(viewModel = UsuarioViewModel(UsuarioRepository()), navController = NavHostController(LocalContext.current))
-}

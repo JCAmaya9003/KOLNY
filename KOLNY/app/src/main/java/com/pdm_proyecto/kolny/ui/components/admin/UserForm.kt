@@ -98,23 +98,15 @@ fun UserForm(
                 isFormatted = true
             )
         }
-        if (!isEditMode || showPasswordInput) {
-            item {
-                FormInput(
+        item {
+            FormInput(
                     fieldKey = "password",
                     label = if (isEditMode) "Crear nueva contraseña:" else "Contraseña:",
                     placeHolder = if (isEditMode) "(dejar en blanco si no es necesario)" else "root1234",
                     viewModel = formViewModel,
                     inputType = KeyboardType.Password,
                     isPassword = true
-                )
-            }
-        } else {
-            item {
-                Button(onClick = { showPasswordInput = true }) {
-                    Text("Cambiar contraseña")
-                }
-            }
+            )
         }
         item {
             FormInput(
@@ -136,7 +128,7 @@ fun UserForm(
                     requiredFields += "password"
                 }
 
-                val isValid = formViewModel.validate(requiredFields, optionalFields)
+                val isValid = formViewModel.validate(fields = requiredFields + optionalFields, optionalFields = optionalFields)
 
                 if (isValid) {
                     val usuario = Usuario(

@@ -175,6 +175,7 @@ fun UserCard(
                     )
                 }
                 UserInfo(label = "Correo Electrónico:", value = usuario.email)
+                UserInfo(label = "Password:", value = usuario.password)
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -210,10 +211,4 @@ fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
         Text( text = value )
     }
     Spacer(modifier = Modifier.height(4.dp))
-}
-
-@Preview
-@Composable
-fun AdminUserPreview() {
-    AdminUserScreen(viewModel = UsuarioViewModel(UsuarioRepository()), navController = NavHostController(LocalContext.current))
 }

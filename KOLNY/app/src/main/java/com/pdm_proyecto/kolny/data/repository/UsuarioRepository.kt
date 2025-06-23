@@ -62,7 +62,7 @@ class UsuarioRepository() {
                     fechaNacimiento = createDate(1992, 11, 30),
                     casa = "4D",
                     email = "ana.martinez@example.com",
-                    password = "anita92",
+                    password = "anita9269",
                     activo = true,
                     rol = "ADMIN",
                     tipoAdmin = "EDITOR"
@@ -74,7 +74,7 @@ class UsuarioRepository() {
                     fechaNacimiento = createDate(1988, 7, 5),
                     casa = "5E",
                     email = "luisa.rodriguez@example.com",
-                    password = "luisa88",
+                    password = "luisa8869",
                     activo = true,
                     rol = "USUARIO",
                     tipoAdmin = null
@@ -98,7 +98,7 @@ class UsuarioRepository() {
                     fechaNacimiento = createDate(1993, 9, 25),
                     casa = "7G",
                     email = "sofia.ramirez@example.com",
-                    password = "sofia93",
+                    password = "sofia9369",
                     activo = true,
                     rol = "ADMIN",
                     tipoAdmin = "MODERADOR"
