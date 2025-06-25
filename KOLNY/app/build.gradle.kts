@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.github.yalantis:ucrop:2.2.8")
+    implementation("com.github.CanHub:Android-Image-Cropper:4.3.2")
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
@@ -57,6 +59,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.coil.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

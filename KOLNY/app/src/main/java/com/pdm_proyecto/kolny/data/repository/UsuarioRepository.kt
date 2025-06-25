@@ -92,7 +92,7 @@ class UsuarioRepository() {
                     tipoAdmin = null
                 ),
                 Usuario(
-                    dui = "789123456-9",
+                    dui = "78912345-6",
                     nombre = "Sofía Ramírez",
                     telefono = "2257-7777",
                     fechaNacimiento = createDate(1993, 9, 25),
@@ -112,6 +112,19 @@ class UsuarioRepository() {
     fun addUsuario(usuario: Usuario): List<Usuario> {
         usuarios.add(usuario)
         return usuarios.toList() //que el dao devuelva la lista de usuarios actualizada
+    }
+
+    fun updateUsuario(usuarioActualizado: Usuario): List<Usuario> {
+        val index = usuarios.indexOfFirst { it.dui == usuarioActualizado.dui }
+        if (index != -1) {
+            usuarios[index] = usuarioActualizado
+        }
+        return usuarios.toList()
+    }
+
+    fun deleteUsuario(usuario: Usuario): List<Usuario> {
+        usuarios.removeAll { it.dui == usuario.dui }
+        return usuarios.toList()
     }
 
     fun getUsuarioByDui(dui: String) : Usuario? = usuarios.find { it.dui == dui }

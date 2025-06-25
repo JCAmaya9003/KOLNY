@@ -1,19 +1,21 @@
 package com.pdm_proyecto.kolny.ui.components.admin
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -21,9 +23,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.ui.components.DatePickerInput
 import com.pdm_proyecto.kolny.ui.components.FormInput
+import com.pdm_proyecto.kolny.ui.components.ImagePickerInput
+
 import com.pdm_proyecto.kolny.viewmodels.FormViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
-import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 
 @Composable
 fun UserForm(
@@ -37,10 +40,9 @@ fun UserForm(
         key = if (isEditMode) "screen_admin_edit_user" else "screen_admin_add_user"
     )
 
-    var showPasswordInput by remember { mutableStateOf(!isEditMode) }
-
     LaunchedEffect(initialData) {
         initialData?.let { usuario ->
+            formViewModel.setInitialImageUri("fotoPerfil", usuario.fotoPerfil)
             formViewModel.setInitialTextValue("nombre", usuario.nombre)
             formViewModel.setInitialFormattedValue("telefono", TextFieldValue(usuario.telefono))
             formViewModel.setInitialDateValue("fechaNacimiento", usuario.fechaNacimiento)
@@ -53,6 +55,22 @@ fun UserForm(
 
 
     LazyColumn {
+        item {
+            ImagePickerInput(
+                fieldKey = "fotoPerfil",
+                viewModel = formViewModel,
+                defaultContent = {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = "Ícono de perfil",
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+                },
+                shape = CircleShape,
+                showPreview = true
+            )
+        }
         item {
             FormInput(
                 fieldKey = "nombre",
@@ -132,6 +150,7 @@ fun UserForm(
 
                 if (isValid) {
                     val usuario = Usuario(
+                        fotoPerfil = formViewModel.imageFields["fotoPerfil"],
                         dui = formViewModel.formattedTextFields["dui"]?.text ?: return@Button,
                         nombre = formViewModel.textFields["nombre"] ?: return@Button,
                         telefono = formViewModel.formattedTextFields["telefono"]?.text ?: return@Button,

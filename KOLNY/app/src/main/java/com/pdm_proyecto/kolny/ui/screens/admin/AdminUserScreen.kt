@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,7 +129,8 @@ fun UserCard(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = rememberAsyncImagePainter(
+                        model = usuario.fotoPerfil ?: R.drawable.ic_launcher_foreground),
                     contentDescription = "Usuario",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -175,7 +177,6 @@ fun UserCard(
                     )
                 }
                 UserInfo(label = "Correo Electrónico:", value = usuario.email)
-                UserInfo(label = "Password:", value = usuario.password)
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

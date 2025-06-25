@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.pdm_proyecto.kolny.utils.formatDate
 import com.pdm_proyecto.kolny.utils.formatWithHyphen
 import java.util.Date
+import android.net.Uri
 
 //si hay problemas más tarde con corrutinas hay que adaptar esto a StateFlow
 class FormViewModel : ViewModel() {
@@ -20,6 +21,13 @@ class FormViewModel : ViewModel() {
 
     private val _dateFields = mutableStateMapOf<String, Date>()
     val dateFields: Map<String, Date> get() = _dateFields
+
+    //SOLO PARA TRABAJAR LOCAL
+    private val _imageFields = mutableStateMapOf<String, String?>()
+    val imageFields: Map<String, String?> get() = _imageFields
+    //las imagenes son actualmente un String que contiene el URI local
+    //cuando se conecte a backend, cambiar esta parte para:
+    //subir la imagen a la BD y obtener el URL de la imagen en lugar del URI local
 
     private val _errors = mutableStateMapOf<String, String?>()
     val errors: Map<String, String?> get() = _errors
@@ -37,10 +45,15 @@ class FormViewModel : ViewModel() {
         _dateFields[key] = date
     }
 
+    fun setInitialImageUri(key: String, uri: String?) {
+        _imageFields[key] = uri
+    }
+
     fun clearAllFields() {
         _textFields.clear()
         _formattedTextFields.clear()
         _dateFields.clear()
+        _imageFields.clear()
         _errors.clear()
     }
 
@@ -57,6 +70,10 @@ class FormViewModel : ViewModel() {
 
     fun onDateChange(key: String, date: Date) {
         _dateFields[key] = date
+    }
+
+    fun onImageSelected(key: String, uri: Uri?) {
+        _imageFields[key] = uri?.toString()
     }
 
     fun getFormattedDate(key: String): String {

@@ -57,14 +57,7 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     fun editUsuario(usuario: Usuario) {
         viewModelScope.launch {
             try {
-                val currentList = _usuarios.value.toMutableList()
-                val index = currentList.indexOfFirst { it.dui == usuario.dui }
-                if (index != -1) {
-                    currentList.removeAt(index)
-                    currentList.add(index, usuario)
-                    _usuarios.value = currentList
-                    /*poner aquí el dao para editar*/
-                }
+                _usuarios.value = repository.updateUsuario(usuario).toList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -74,9 +67,7 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     fun deleteUsuario(usuario: Usuario) {
         viewModelScope.launch {
             try {
-                val updatedList = _usuarios.value.filterNot { it.dui == usuario.dui }
-                _usuarios.value = updatedList
-                /*poner aquí el dao para eliminar*/
+                _usuarios.value = repository.deleteUsuario(usuario).toList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

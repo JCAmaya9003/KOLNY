@@ -3,7 +3,7 @@ package com.pdm_proyecto.kolny.data.models
 import java.util.Date
 
 data class Usuario(
-    /*por aca debe estar la foto*/
+    val fotoPerfil: String? = null,
     val dui: String,
     val nombre: String,
     val telefono: String,
