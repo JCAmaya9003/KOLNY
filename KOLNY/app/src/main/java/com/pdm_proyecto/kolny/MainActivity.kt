@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.AdminUserNavigation
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
+import com.pdm_proyecto.kolny.screens.login.LoginScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModelFactory
@@ -17,11 +18,15 @@ import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModelFactory
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
                 AdminUserNavigation(navController = navController)
+                LoginScreen(
+                    onLoginSuccess = {
+                        // Aquí luego redirigiremos por rol
+                    }
+                )
             }
         }
     }
