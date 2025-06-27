@@ -6,6 +6,7 @@ package com.pdm_proyecto.kolny.data.repository
 import com.pdm_proyecto.kolny.data.models.Usuario
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
 
 fun createDate(year: Int, month: Int, day: Int): Date {
     val calendar = Calendar.getInstance()
@@ -13,7 +14,7 @@ fun createDate(year: Int, month: Int, day: Int): Date {
     return calendar.time
 }
 
-class UsuarioRepository() {
+class UsuarioRepository @Inject constructor() {
     private val usuarios = mutableListOf<Usuario>()
 
     init {

@@ -9,11 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.AdminUserNavigation
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+
 
 //ESTA ASÍ PARA PRUEBAS
 //Navigation MUY básica
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

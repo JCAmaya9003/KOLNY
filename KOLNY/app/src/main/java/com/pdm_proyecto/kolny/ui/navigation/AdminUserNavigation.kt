@@ -11,12 +11,12 @@ import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminEditUserScreen
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminUserScreen
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModelFactory
+import androidx.hilt.navigation.compose.hiltViewModel
 
 //NAVEGACIÓN SOLO PARA MOVERSE ENTRE PANTALLAS DE CRUD DE USUARIO
 @Composable
 fun AdminUserNavigation(navController: NavHostController) {
-    val usuarioViewModel: UsuarioViewModel = viewModel(factory = UsuarioViewModelFactory())
+    val usuarioViewModel: UsuarioViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,

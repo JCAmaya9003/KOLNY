@@ -4,12 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.data.repository.UsuarioRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /*en lugar del repository va a ir el dao*/
-class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() {
+@HiltViewModel
+class UsuarioViewModel @Inject constructor(
+    private val repository: UsuarioRepository
+) : ViewModel() {
 
     private val _usuarios = MutableStateFlow<List<Usuario>>(emptyList())
     val usuarios: StateFlow<List<Usuario>> = _usuarios
