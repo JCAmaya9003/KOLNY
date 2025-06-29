@@ -46,15 +46,18 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminUserScreen(viewModel: UsuarioViewModel) {
+fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController)
+ {
 
     val usuarios by viewModel.usuarios.collectAsState()
 
     Scaffold (
-        topBar = { KolnyTopBar(rol = "ADMIN") }
+        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) },
     ){ innerPadding ->
         Column(
             modifier = Modifier
@@ -208,5 +211,9 @@ fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun AdminUserPreview() {
-    AdminUserScreen(viewModel = UsuarioViewModel(UsuarioRepository()))
+    val fakeNavController = rememberNavController()
+    AdminUserScreen(
+        viewModel = UsuarioViewModel(UsuarioRepository()),
+        navController = fakeNavController
+    )
 }

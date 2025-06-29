@@ -35,13 +35,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.pdm_proyecto.kolny.R
+import com.pdm_proyecto.kolny.ui.navigation.Routes
 
 //SOLO PARA PROBAR
 //luego mejorar lógica(para filtro de roles) y logos
 //logos, cambiarlos en el drawable
 @Composable
-fun KolnyTopBar(rol: String?) {
+fun KolnyTopBar(
+    rol: String?,
+    navController: NavController
+) {
     Surface(
         color = Color(0xFFD0F1FF),
         shadowElevation = 4.dp,
@@ -55,10 +60,8 @@ fun KolnyTopBar(rol: String?) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                //esta va a ser la imagen del usuario
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Usuario",
@@ -74,49 +77,47 @@ fun KolnyTopBar(rol: String?) {
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
-                IconButton(onClick = { /*cerrar sesión*/ }){
-                    Icon(Icons.Default.Close, contentDescription= "Cerrar sesión")
+                IconButton(onClick = {
+                    // Por ejemplo: cerrar sesión o regresar al login
+                    navController.popBackStack()
+                }) {
+                    Icon(Icons.Default.Close, contentDescription = "Cerrar sesión")
                 }
             }
+
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if(rol === "ADMIN") {
-                    IconButton(onClick = { /*dirigiir a pantalla de CRUD*/ }) {
-                        Icon(Icons.Default.Person, contentDescription = "Perfiles")
+                when (rol) {
+                    "ADMIN" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Routes.USERS_SCREEN)
+                        }) {
+                            Icon(Icons.Default.Person, contentDescription = "Usuarios")
+                        }
+                    }
+                    "VIGILANTE" -> {
+                        IconButton(onClick = {
+                            // Futuro: navega a visitas
+                        }) {
+                            Icon(Icons.Default.Face, contentDescription = "Visitas")
+                        }
                     }
                 }
-                if(rol === "VIGILANTE"){
-                    IconButton(onClick = { /*dirigir a pantalla de visitas*/ } ) {
-                        Icon(Icons.Default.Face, contentDescription = "Visitas")
-                    }
-                }
-                IconButton(onClick = { /*dirigir a pantalla de noticias*/ }) {
+
+                IconButton(onClick = {
+                    navController.navigate(Routes.HOME_SCREEN)
+                }) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
-                IconButton(onClick = { /*dirigir a pantalla de eventos*/ }) {
+
+                IconButton(onClick = {
+                    navController.navigate(Routes.EVENT_SCREEN)
+                }) {
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }
             }
-        }
-    }
-}
-
-@Preview
-@ExperimentalMaterial3Api
-@Composable
-fun TopBarPreview() {
-    Scaffold(
-        topBar = {KolnyTopBar(rol = "VIGILANTE")}
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            Text("si funciona")
         }
     }
 }

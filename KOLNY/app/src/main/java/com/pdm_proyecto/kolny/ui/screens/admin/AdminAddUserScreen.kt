@@ -19,17 +19,22 @@ import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.viewmodels.FormViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun AdminAddUserScreen(usuarioViewModel: UsuarioViewModel) {
+fun AdminAddUserScreen(
+    usuarioViewModel: UsuarioViewModel,
+    navController: NavController
+) {
 
     //para cuando usen el formViewModel, solo cambien la key
     val formViewModel: FormViewModel = viewModel(key = "screen_admin_add_user")
     val usuarios by usuarioViewModel.usuarios.collectAsState()
 
     Scaffold(
-        topBar = { KolnyTopBar(rol = "ADMIN") },
-    ) { innerPadding ->
+        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) },
+        ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -150,5 +155,9 @@ fun AdminAddUserScreen(usuarioViewModel: UsuarioViewModel) {
 @Preview
 @Composable
 fun FormScreenPreview() {
-    AdminAddUserScreen(usuarioViewModel = UsuarioViewModel(UsuarioRepository()))
+    val fakeNavController = rememberNavController() // Esto solo funciona en previews simples
+    AdminAddUserScreen(
+        usuarioViewModel = UsuarioViewModel(UsuarioRepository()),
+        navController = fakeNavController
+    )
 }
