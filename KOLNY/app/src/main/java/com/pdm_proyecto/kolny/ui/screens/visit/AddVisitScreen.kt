@@ -1,4 +1,4 @@
-package com.pdm_proyecto.kolny.ui.screens.admin
+package com.pdm_proyecto.kolny.ui.screens.visit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,34 +8,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.pdm_proyecto.kolny.data.models.Usuario
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
-import com.pdm_proyecto.kolny.ui.components.admin.UserForm
+import com.pdm_proyecto.kolny.ui.components.visit.VisitForm
+import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
 @Composable
-fun AdminEditUserScreen(
-    viewModel: UsuarioViewModel,
-    navController: NavHostController,
-    usuario: Usuario,
-    onDone: () -> Unit
+fun AddVisitScreen(
+    rol: String,
+    viewModel: VisitaViewModel,
+    navController: NavHostController
 ) {
 
     Scaffold(
-        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) },
+        topBar = { KolnyTopBar(rol = rol, navController = navController) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(top = 16.dp)
                 .fillMaxSize(),
-        ) {
-            UserForm(
-                usuarioViewModel = viewModel,
-                initialData = usuario,
-                onSubmitSuccess = { onDone() }
+        ){
+            VisitForm(
+                visitaViewModel = viewModel,
+                onSubmitSuccess = { navController.popBackStack() }
             )
         }
     }
 }
-
