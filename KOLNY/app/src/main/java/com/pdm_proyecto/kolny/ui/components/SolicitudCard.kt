@@ -44,7 +44,7 @@ fun SolicitudCard(
                 Button(
                     onClick = {
                         mostrarDialogo = false
-                        onRechazar() // ✅ aquí se ejecuta la eliminación real
+                        onRechazar()
                     }
                 ) {
                     Text("Aceptar")
@@ -80,7 +80,7 @@ fun SolicitudCard(
                 }
                 Button(
                     onClick = {
-                        mostrarDialogo = true // 👉 activa el diálogo
+                        mostrarDialogo = true
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Gray)
                 ) {

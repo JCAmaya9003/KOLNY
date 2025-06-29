@@ -35,7 +35,7 @@ fun EventScreen(
     else
         viewModel.eventos
 
-    val solicitudesPendientesCount = viewModel.eventos.count { !it.aprobado }
+    val solicitudesPendientesCount = viewModel.solicitudes.size
 
     val contexto = LocalContext.current
     val calendario = Calendar.getInstance()
@@ -161,7 +161,7 @@ fun EventScreen(
         }
     }
 
-    // 🟢 AlertDialog fuera de Scaffold pero dentro del composable
+
     if (mostrarDialogo && eventoAEliminar != null) {
         AlertDialog(
             onDismissRequest = {

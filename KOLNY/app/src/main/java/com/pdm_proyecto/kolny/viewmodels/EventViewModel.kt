@@ -96,7 +96,7 @@ class EventViewModel : ViewModel() {
     }
 
     fun seleccionarEvento(evento: Evento) {
-        eventoSeleccionado = evento // crea una variable mutableStateOf<Evento?>()
+        eventoSeleccionado = evento
     }
 
     fun limpiarEventoSeleccionado() {
@@ -104,7 +104,7 @@ class EventViewModel : ViewModel() {
     }
 
     fun obtenerSolicitudes(): List<Evento> {
-        return solicitudes // ✅ devuelve la lista correcta
+        return solicitudes
     }
 
 
