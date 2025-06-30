@@ -124,7 +124,7 @@ fun VisitCard(
                     modifier = Modifier.weight(1f)
                 )
             }
-            if (visita.placa != null) {
+            if (!visita.placa.isNullOrBlank()) {
                 CardInfo(label = "Placa:", value = visita.placa)
             }
             CardInfo(label = "Motivo:", value = visita.motivo)

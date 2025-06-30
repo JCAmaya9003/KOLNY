@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
+import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
 import com.pdm_proyecto.kolny.ui.navigation.guard.GuardNavigation
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
-                GuardNavigation(navController = navController)
+                AdminNavigation(navController = navController)
             }
         }
     }
