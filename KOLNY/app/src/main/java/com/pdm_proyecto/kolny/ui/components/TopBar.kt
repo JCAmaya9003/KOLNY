@@ -100,7 +100,7 @@ fun KolnyTopBar(
                         Icon(Icons.Default.Face, contentDescription = "Visitas")
                     }
                 }
-                IconButton(onClick = { /*dirigir a pantalla de noticias*/ }) {
+                IconButton(onClick = { navController.navigate("noticias") }) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
                 IconButton(onClick = { /*dirigir a pantalla de eventos*/ }) {

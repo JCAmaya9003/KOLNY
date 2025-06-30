@@ -12,11 +12,16 @@ import com.pdm_proyecto.kolny.ui.screens.admin.AdminEditUserScreen
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminUserScreen
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.pdm_proyecto.kolny.ui.screens.noticias.NoticiasScreen
+import com.pdm_proyecto.kolny.ui.screens.noticias.NoticiaFormScreen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 
 //NAVEGACIÓN SOLO PARA MOVERSE ENTRE PANTALLAS DE CRUD DE USUARIO
 @Composable
 fun AdminUserNavigation(navController: NavHostController) {
     val usuarioViewModel: UsuarioViewModel = hiltViewModel()
+    val noticiaViewModel: NoticiaViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -54,6 +59,21 @@ fun AdminUserNavigation(navController: NavHostController) {
                 Log.d("AdminEditUserScreen", "no hay usuario seleccionado")
             }
         }
+        composable("noticias") {
+            NoticiasScreen(
+                navController = navController,
+                noticiaViewModel = noticiaViewModel,
+                rol = "ADMIN"
+            )
+        }
+        composable("noticiaForm") {
+            NoticiaFormScreen(
+                navController = navController,
+                noticiaViewModel = noticiaViewModel
+            )
+        }
+
     }
 }
+
 
