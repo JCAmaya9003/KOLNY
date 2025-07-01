@@ -21,6 +21,7 @@ class EventViewModel : ViewModel() {
 
         enviarSolicitud(
             Evento(
+                id = generarId(),
                 titulo = "Torneo de fútbol",
                 descripcion = "Competencia entre colonias",
                 lugar = "Cancha principal",
@@ -33,6 +34,7 @@ class EventViewModel : ViewModel() {
 
         enviarSolicitud(
             Evento(
+                id = generarId(),
                 titulo = "Clase de yoga",
                 descripcion = "Clase al aire libre para adultos",
                 lugar = "Parque central",
@@ -70,15 +72,25 @@ class EventViewModel : ViewModel() {
 
 
     fun agregarEvento(evento: Evento) {
-        _eventos.add(evento.copy(id = generarId(), aprobado = true))
+        val idAsignado = if (evento.id == 0) generarId() else evento.id
+        _eventos.add(evento.copy(id = idAsignado, aprobado = true))
     }
 
+
     fun enviarSolicitud(evento: Evento) {
-        _solicitudes.add(evento.copy(id = generarId(), aprobado = false))
+        val idAsignado = if (evento.id == 0) generarId() else evento.id
+        _solicitudes.add(evento.copy(id = idAsignado, aprobado = false))
     }
 
     fun eliminarEvento(eventoId: Int) {
         _eventos.removeIf { it.id == eventoId }
+    }
+
+    fun actualizarEvento(eventoActualizado: Evento) {
+        val index = _eventos.indexOfFirst { it.id == eventoActualizado.id }
+        if (index != -1) {
+            _eventos[index] = eventoActualizado
+        }
     }
 
     fun obtenerEventosPorFecha(fecha: String): List<Evento> {
@@ -86,9 +98,9 @@ class EventViewModel : ViewModel() {
     }
 
     fun aprobarSolicitud(evento: Evento) {
-        val aprobado = evento.copy(aprobado = true)
-        _solicitudes.removeIf { it.id == evento.id }
-        agregarEvento(aprobado)        // agrega como evento aprobado
+        val eventoAprobado = evento.copy(aprobado = true)
+        eliminarSolicitud(evento.id)
+        agregarEvento(eventoAprobado)
     }
 
     fun eliminarSolicitud(eventoId: Int) {
@@ -107,8 +119,31 @@ class EventViewModel : ViewModel() {
         return solicitudes
     }
 
+    fun existeTraslapeDeEvento(fecha: String, horaInicio: String, horaFin: String): Boolean {
+        return eventos.any { evento ->
+
+            if (eventoSeleccionado != null && evento.id == eventoSeleccionado!!.id) {
+                return@any false
+            }
+
+            if (evento.fecha != fecha) return@any false
+
+            val inicioConflicto = horaInicio < evento.horaFin
+            val finConflicto = horaFin > evento.horaInicio
+
+            inicioConflicto && finConflicto
+        }
+    }
 
 
-    private var contadorId = 1
-    private fun generarId(): Int = contadorId++
+    private fun generarId(): Int {
+        var nuevoId = 1
+        val idsExistentes = (_eventos.map { it.id } + _solicitudes.map { it.id }).toSet()
+        while (idsExistentes.contains(nuevoId)) {
+            nuevoId++
+        }
+        return nuevoId
+    }
+
+
 }

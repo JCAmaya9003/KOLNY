@@ -62,7 +62,7 @@ fun SolicitudesScreen(
                                 Text("Aceptar")
                             }
                             Button(onClick = {
-                                viewModel.eliminarEvento(solicitud.id)
+                                viewModel.eliminarSolicitud(solicitud.id)
                             }) {
                                 Text("Rechazar")
                             }

@@ -5,6 +5,7 @@ import android.app.TimePickerDialog
 import android.widget.TimePicker
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +17,6 @@ import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import java.util.*
 
-
-
 @Composable
 fun CreateEventScreen(
     esAdmin: Boolean = true,
@@ -26,7 +25,6 @@ fun CreateEventScreen(
     onEventoGuardado: () -> Unit
 ) {
     val context = LocalContext.current
-
     val eventoSeleccionado = viewModel.eventoSeleccionado
 
     var titulo by remember { mutableStateOf(eventoSeleccionado?.titulo ?: "") }
@@ -35,6 +33,9 @@ fun CreateEventScreen(
     var fecha by remember { mutableStateOf(eventoSeleccionado?.fecha ?: "") }
     var horaInicio by remember { mutableStateOf(eventoSeleccionado?.horaInicio ?: "") }
     var horaFin by remember { mutableStateOf(eventoSeleccionado?.horaFin ?: "") }
+
+    var mostrarDialogoError by remember { mutableStateOf(false) }
+    var mensajeError by remember { mutableStateOf("") }
 
     val calendar = Calendar.getInstance()
 
@@ -117,6 +118,30 @@ fun CreateEventScreen(
 
             Button(
                 onClick = {
+                    // Valida campos vacíos
+                    if (titulo.isBlank() || descripcion.isBlank() || lugar.isBlank()
+                        || fecha.isBlank() || horaInicio.isBlank() || horaFin.isBlank()
+                    ) {
+                        mensajeError = "Por favor, completa todos los campos antes de guardar."
+                        mostrarDialogoError = true
+                        return@Button
+                    }
+
+                    // Valida orden de horas
+                    if (horaInicio >= horaFin) {
+                        mensajeError = "La hora de inicio debe ser antes que la hora de fin."
+                        mostrarDialogoError = true
+                        return@Button
+                    }
+
+                    // Valida traslape
+                    if (viewModel.existeTraslapeDeEvento(fecha, horaInicio, horaFin)) {
+                        mensajeError = "Ya existe un evento en ese horario. Selecciona otra hora o fecha."
+                        mostrarDialogoError = true
+                        return@Button
+                    }
+
+                    // Crear evento
                     val evento = Evento(
                         titulo = titulo,
                         descripcion = descripcion,
@@ -127,11 +152,17 @@ fun CreateEventScreen(
                         creadoPor = if (esAdmin) "admin" else "usuario",
                         aprobado = esAdmin
                     )
+
                     if (esAdmin) {
-                        viewModel.agregarEvento(evento)
+                        if (eventoSeleccionado != null) {
+                            viewModel.actualizarEvento(evento.copy(id = eventoSeleccionado.id))
+                        } else {
+                            viewModel.agregarEvento(evento)
+                        }
                     } else {
                         viewModel.enviarSolicitud(evento)
                     }
+
                     viewModel.limpiarEventoSeleccionado()
                     onEventoGuardado()
                 },
@@ -140,5 +171,21 @@ fun CreateEventScreen(
                 Text(if (esAdmin) "Guardar" else "Enviar")
             }
         }
+
+        if (mostrarDialogoError) {
+            AlertDialog(
+                onDismissRequest = { mostrarDialogoError = false },
+                title = { Text("Error") },
+                text = { Text(mensajeError) },
+                confirmButton = {
+                    Button(onClick = { mostrarDialogoError = false }) {
+                        Text("Aceptar")
+                    }
+                }
+            )
+        }
     }
 }
+
+
+
