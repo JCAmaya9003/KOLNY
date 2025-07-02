@@ -1,13 +1,13 @@
 package com.pdm_proyecto.kolny
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.navigation.compose.rememberNavController
-import com.pdm_proyecto.kolny.ui.navigation.AdminUserNavigation
-import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
+import com.pdm_proyecto.kolny.ui.navigation.RootNavGraph
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,13 +16,14 @@ import dagger.hilt.android.AndroidEntryPoint
 //Navigation MUY básica
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
-                AdminUserNavigation(navController = navController)
+                RootNavGraph(navController)
             }
         }
     }
