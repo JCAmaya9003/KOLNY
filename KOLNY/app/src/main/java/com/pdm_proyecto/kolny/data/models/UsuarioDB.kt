@@ -5,11 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UsuarioDB(
-    @SerialName("idusuario") val idusuario: Int,
+    @SerialName("dui") val dui: String,
     val activo: Boolean,
     val fotoperfil: ByteArray? = null,
     val nombre: String,
-    val dui: String,
     val telefono: String? = null,
     val correo: String,
     val password: String,

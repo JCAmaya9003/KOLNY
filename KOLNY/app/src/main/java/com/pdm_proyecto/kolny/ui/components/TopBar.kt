@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.R
+import com.pdm_proyecto.kolny.ui.navigation.Route
 
 //SOLO PARA PROBAR
 //luego mejorar lógica(para filtro de roles) y logos
@@ -88,8 +89,8 @@ fun KolnyTopBar(
                     firebase.signOut()
 
                     /* 2. Navegar a login limpiando el backstack */
-                    navController.navigate("login") {
-                        popUpTo(0)           // borra todo el stack
+                    navController.navigate(Route.Login.route) {
+                        popUpTo(0)
                         launchSingleTop = true
                     }
                 })

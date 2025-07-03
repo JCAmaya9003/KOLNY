@@ -22,6 +22,7 @@ class AuthRepository @Inject constructor(
     suspend fun loginWithGoogle(credential: AuthCredential): Usuario? {
         firebase.signInWithCredential(credential).await()
         val correo = firebase.currentUser?.email ?: return null
+        Log.d("EMAIL", "/EMAIL FIREBASE: $correo")
 
         val row = supabase
             .from("usuarios")                      // ← minúsculas
@@ -69,6 +70,7 @@ class AuthRepository @Inject constructor(
 
             /* Rol & mapping */
             val (rol, tipoAdmin) = resolverRol(row)
+            Log.d("LOGIN", "TIPO ADMIN: $tipoAdmin")
             mapearResultado(row.toUsuario(rol, tipoAdmin))
         }.getOrElse { ResultadoAcceso.NoRegistrado }
 
@@ -77,19 +79,28 @@ class AuthRepository @Inject constructor(
     private suspend fun resolverRol(row: UsuarioDB): Pair<String, String?> = when (row.idrol) {
         1 -> "Residente"   to null
         2 -> "Vigilante"   to null
-        3 -> "Administrador" to obtenerTipoAdmin(row.idusuario)
+        3 -> "Administrador" to obtenerTipoAdmin(row.dui)
         else -> "Desconocido" to null
     }
 
     /** lee tabla `administradores` y devuelve "Desarrollador", "Directiva" o null */
-    private suspend fun obtenerTipoAdmin(idUsuario: Int): String? =
+    private suspend fun obtenerTipoAdmin(dui: String): String? = runCatching {
         supabase
             .from("administradores")
-            .select { filter { eq("idadministrador", idUsuario) }
-                single() }
-            .decodeAs<AdministradorDb>()              // DTO de abajo
+            .select {
+                filter { eq("administradordui", dui) }
+                single()                              // ← devuelve objeto JSON
+            }
+            .decodeAs<AdministradorDb>()              // ← ahora sí encuentra serializer
             .idtipoadmin
-            .let { if (it == 1) "Desarrollador" else if (it == 2) "Directiva" else null }
+    }.getOrNull()                                     // null si no hay fila o error
+        ?.let {
+            when (it) {
+                1 -> "Desarrollador"
+                2 -> "Directiva"
+                else -> null
+            }
+        }
     //poner un log para verificar que se  este haciendo bien, ya que la funcion del email cambio,
     // YA LO CAMBIE, LA CLAVE ES EL DECODEAS
 
