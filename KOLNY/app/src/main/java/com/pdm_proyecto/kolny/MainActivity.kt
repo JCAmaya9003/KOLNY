@@ -10,6 +10,7 @@ import com.pdm_proyecto.kolny.ui.navigation.AdminUserNavigation
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
+import com.pdm_proyecto.kolny.ui.navigation.NoticiasNavHost
 
 
 //ESTA ASÍ PARA PRUEBAS
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
-                AdminUserNavigation(navController = navController)
+                NoticiasNavHost(navController = navController)
             }
         }
     }

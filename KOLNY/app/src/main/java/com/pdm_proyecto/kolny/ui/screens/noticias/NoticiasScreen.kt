@@ -16,6 +16,7 @@ import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.foundation.clickable
 
 @Composable
 fun NoticiasScreen(
@@ -88,7 +89,10 @@ fun NoticiasScreen(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
+                                    .padding(vertical = 4.dp)
+                                    .clickable {
+                                        navController.navigate("detalleNoticia/${noticia.idnoticia}")
+                                    },
                                 elevation = CardDefaults.cardElevation(2.dp)
                             ) {
                                 Column(modifier = Modifier.padding(12.dp)) {
