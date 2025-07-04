@@ -15,18 +15,14 @@ sealed class Route(val route: String) {
     object AdminEditUser: Route("admin_edit_user")
     object EventRequests: Route("admin_event_requests")
 
-    /* ---------- Vigilante ---------- */
-    /*object VigilanteHome      : Route("vigilante_home")
-    object Bitacora       : Route("vigilante_bitacora")
-
-    /* ---------- Residente ---------- */
-    object ResidenteHome        : Route("res_home")
-    object Perfil         : Route("res_perfil")*/
-
     object Eventos: Route("eventos")
     object CreateEvent: Route("create_event")
 
     object Visitas: Route("visitas")
     object AddVisita: Route("add_visit")
     object EditVisita: Route("edit_visit")
+
+    object Noticias: Route("noticias")
+    object CreateNoticia: Route("create_noticia")
+    object ViewNoticia: Route("view_noticia")
 }

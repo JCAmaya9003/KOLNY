@@ -10,4 +10,5 @@ data class Noticia(
     val contenido: String,
     val fechaPublicacion: LocalDateTime,
     val autorId: String  // Relación con Usuario
+
 )

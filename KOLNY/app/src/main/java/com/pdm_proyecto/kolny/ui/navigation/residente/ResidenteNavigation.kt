@@ -3,6 +3,7 @@ package com.pdm_proyecto.kolny.ui.navigation.residente
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable

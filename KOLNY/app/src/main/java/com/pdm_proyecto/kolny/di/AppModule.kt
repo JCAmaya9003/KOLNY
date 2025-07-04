@@ -55,4 +55,10 @@ object AppModule {
     fun provideVisitaRepository(): VisitaRepository {
         return VisitaRepository()
     }
+
+    @Provides
+    @Singleton
+    fun provideNoticiaRepository(): NoticiaRepository {
+        return NoticiaRepository()
+    }
 }

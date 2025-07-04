@@ -118,8 +118,7 @@ fun KolnyTopBar(
                         }
                     }
                 }
-
-                IconButton(onClick = {}) {
+                IconButton(onClick = { navController.navigate(Route.Noticias.route) }) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
 
