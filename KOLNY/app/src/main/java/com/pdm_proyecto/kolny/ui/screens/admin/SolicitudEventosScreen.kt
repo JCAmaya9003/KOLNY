@@ -21,9 +21,14 @@ import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 @Composable
 fun SolicitudesEventosScreen(
     navController: NavHostController,
-    viewModel: EventViewModel
+    viewModel: EventViewModel,
+    usuarioAdmin: String
 ) {
-    val solicitudes by viewModel.solicitudes.collectAsState()
+    val eventos by viewModel.eventos.collectAsState()
+
+    val solicitudes = eventos.filter {
+        it.creadoPor != usuarioAdmin
+    }
 
     Scaffold(
         topBar = {
@@ -40,26 +45,36 @@ fun SolicitudesEventosScreen(
                 style = MaterialTheme.typography.titleLarge
             )
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                items(solicitudes) { evento ->
-                    SolicitudCard(
-                        evento = evento,
-                        onAceptar = {
-                            viewModel.aprobarSolicitud(evento)
-                        },
-                        onRechazar = {
-                            viewModel.eliminarSolicitud(evento.id)
-                        },
-                        onVerMas = {
-                            viewModel.seleccionarEvento(evento)
-                            navController.navigate(Route.CreateEvent.route)
-                        }
-                    )
+            if (solicitudes.isEmpty()) {
+                Text(
+                    text = "No hay solicitudes pendientes.",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(solicitudes) { evento ->
+                        SolicitudCard(
+                            evento = evento,
+                            onAceptar = {
+                                viewModel.actualizarEvento(evento.copy(creadoPor = usuarioAdmin))
+                            },
+                            onRechazar = {
+                                viewModel.eliminarEvento(evento.id)
+                            },
+                            onVerMas = {
+                                viewModel.seleccionarEvento(evento)
+                                navController.navigate(Route.CreateEvent.route)
+                            }
+                        )
+                    }
                 }
             }
         }
     }
 }
+

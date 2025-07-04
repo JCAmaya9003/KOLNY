@@ -18,6 +18,17 @@ fun NavGraphBuilder.AdminEventNavigationEntries(
     eventViewModel: EventViewModel,
     usuarioViewModel: UsuarioViewModel
 ) {
+    val adminUsuario = Usuario(
+        dui = "12345678-9",
+        nombre = "ADMIN",
+        telefono = "1234-5678",
+        fechaNacimiento = Date(),
+        casa = "Casa Admin",
+        email = "admin@admin.admin",
+        password = "root123",
+        rol = "ADMIN"
+    )
+
     composable(Route.Eventos.route) {
         EventScreen(
             rol = "ADMIN",
@@ -29,7 +40,8 @@ fun NavGraphBuilder.AdminEventNavigationEntries(
         )
     }
 
-    composable(Route.CreateEvent.route) {
+    composable(Route.CreateEvent.route) 
+
         val loggedUser = usuarioViewModel.loggedUser.collectAsState().value
         if (loggedUser != null) {
             CreateEventScreen(
@@ -42,11 +54,14 @@ fun NavGraphBuilder.AdminEventNavigationEntries(
                 usuario = loggedUser
             )
         }
+
     }
 
     composable(Route.EventRequests.route) {
         SolicitudesEventosScreen(
             navController = navController,
-            viewModel = eventViewModel)
+            viewModel = eventViewModel,
+            usuarioAdmin = adminUsuario.nombre // 👈 nuevo parámetro
+        )
     }
 }
