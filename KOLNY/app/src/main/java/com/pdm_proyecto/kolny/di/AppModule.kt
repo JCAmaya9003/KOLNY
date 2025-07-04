@@ -60,7 +60,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNoticiaRepository(): NoticiaRepository {
-        return NoticiaRepository()
+    fun provideNoticiaRepository(supabase: SupabaseClient): NoticiaRepository {
+        return NoticiaRepository(supabase)
     }
 }
