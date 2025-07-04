@@ -10,8 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.RootNavGraph
 import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
-import com.pdm_proyecto.kolny.ui.navigation.residente.ResidenteNavigation
-import com.pdm_proyecto.kolny.ui.navigation.vigilante.VigilanteNavigation
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,12 +25,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
-
                 RootNavGraph(navController)
-
             }
         }
     }
 }
-
-

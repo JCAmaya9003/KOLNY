@@ -1,7 +1,11 @@
 package com.pdm_proyecto.kolny.data.models
 
+import com.pdm_proyecto.kolny.ui.components.DateSerializer
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+
+import java.util.Date
 
 @Serializable
 data class UsuarioDB(
@@ -12,5 +16,7 @@ data class UsuarioDB(
     val telefono: String? = null,
     val correo: String,
     val password: String,
-    @SerialName("idrol") val idrol: Int
+    @SerialName("idrol") val idrol: Int,
+    @Serializable(with = DateSerializer::class)
+    val fecha_nacimiento: Date
 )
