@@ -17,6 +17,9 @@ class UsuarioViewModel @Inject constructor(
     private val repository: UsuarioRepository
 ) : ViewModel() {
 
+
+    private val _loggedUser = MutableStateFlow<Usuario?>(null)
+    val loggedUser: StateFlow<Usuario?> = _loggedUser
     private val _usuarios = MutableStateFlow<List<Usuario>>(emptyList())
     val usuarios: StateFlow<List<Usuario>> = _usuarios
     private val _selected = MutableStateFlow<Usuario?>(null)
@@ -49,6 +52,10 @@ class UsuarioViewModel @Inject constructor(
 
     fun clearSelectedUsuario() {
         _selected.value = null
+    }
+
+    fun logUsuario(email: String) = viewModelScope.launch {
+        _loggedUser.value = repository.getUsuarioByEmail(email)
     }
 }
 

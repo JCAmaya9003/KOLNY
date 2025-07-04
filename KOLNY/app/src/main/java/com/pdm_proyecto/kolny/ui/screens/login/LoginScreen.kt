@@ -36,14 +36,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.pdm_proyecto.kolny.BuildConfig
 import com.pdm_proyecto.kolny.ui.components.google.BotonGoogleLogin
+import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun LoginScreen(
     //navController: NavController,
-    onLoginSuccess: (ResultadoAcceso) -> Unit
-
+    onLoginSuccess: (ResultadoAcceso) -> Unit,
+    usuarioViewModel: UsuarioViewModel
 ) {
 
     //val context = LocalContext.current
@@ -194,7 +195,9 @@ fun LoginScreen(
                     loginIntentado = true
                     /*loginViewModel.email    = emailField.trim()
                     loginViewModel.password = passwordField*/
-                    loginViewModel.loginConEmail(emailField.trim(), passwordField)},
+                    loginViewModel.loginConEmail(emailField.trim(), passwordField)
+                    usuarioViewModel.logUsuario(emailField.trim())
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
