@@ -29,7 +29,8 @@ fun DetalleNoticiaScreen(
     noticiaViewModel: NoticiaViewModel,
     navController: NavHostController,
     rol: String = "ADMIN",
-    idautorActual: Int = 123 // Simula el usuario logueado
+    idautorActual: Int = 123, // Simula el usuario logueado
+    onDone: () -> Unit
 ) {
     val comentarios by noticiaViewModel.comentarios.collectAsState()
     var nuevoComentario by remember { mutableStateOf("") }
@@ -134,6 +135,7 @@ fun DetalleNoticiaScreen(
                                 contenido = nuevoComentario
                             )
                             nuevoComentario = ""
+                            onDone()
                         }
                     },
                     enabled = nuevoComentario.isNotBlank()

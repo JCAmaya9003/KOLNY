@@ -1,6 +1,8 @@
 package com.pdm_proyecto.kolny.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,7 +14,7 @@ import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 
 @Composable
 fun NoticiasNavHost(navController: NavHostController) {
-    val noticiaViewModel: NoticiaViewModel = viewModel()
+    val noticiaViewModel: NoticiaViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,
@@ -22,7 +24,11 @@ fun NoticiasNavHost(navController: NavHostController) {
             NoticiasScreen(
                 navController = navController,
                 noticiaViewModel = noticiaViewModel,
-                rol = "ADMIN"
+                rol = "ADMIN",
+                onViewNoticia = {
+                    noticiaViewModel.selectNoticia(it)
+                    navController.navigate("detalleNoticia")
+                }
             )
         }
         composable("noticiaForm") {
@@ -31,18 +37,18 @@ fun NoticiasNavHost(navController: NavHostController) {
                 noticiaViewModel = noticiaViewModel
             )
         }
-        composable(
-            "detalleNoticia/{idnoticia}",
-            arguments = listOf(navArgument("idnoticia") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("idnoticia") ?: 0
-            val noticia = noticiaViewModel.noticias.value.find { it.idnoticia == id }
+        composable("detalleNoticia") {
+            val noticia = noticiaViewModel.selectedNoticia.collectAsState().value
             if (noticia != null) {
                 DetalleNoticiaScreen(
                     noticia = noticia,
                     noticiaViewModel = noticiaViewModel,
                     navController = navController,
-                    rol = "ADMIN"
+                    rol = "ADMIN",
+                    onDone = {
+                        noticiaViewModel.clearSelectedNoticia()
+                        navController.popBackStack()
+                    }
                 )
             }
         }

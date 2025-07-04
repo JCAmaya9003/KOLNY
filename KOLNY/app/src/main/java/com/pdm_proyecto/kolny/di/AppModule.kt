@@ -1,5 +1,6 @@
 package com.pdm_proyecto.kolny.di
 
+import com.pdm_proyecto.kolny.data.repository.NoticiaRepository
 import com.pdm_proyecto.kolny.data.repository.UsuarioRepository
 import dagger.Module
 import dagger.Provides
@@ -15,5 +16,11 @@ object AppModule {
     @Singleton
     fun provideUsuarioRepository(): UsuarioRepository {
         return UsuarioRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNoticiaRepository(): NoticiaRepository {
+        return NoticiaRepository()
     }
 }

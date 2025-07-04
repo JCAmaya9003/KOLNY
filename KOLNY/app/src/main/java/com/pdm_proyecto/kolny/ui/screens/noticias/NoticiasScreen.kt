@@ -17,12 +17,14 @@ import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.foundation.clickable
+import com.pdm_proyecto.kolny.data.models.Noticia
 
 @Composable
 fun NoticiasScreen(
     navController: NavHostController,
     noticiaViewModel: NoticiaViewModel,
-    rol: String = "ADMIN"
+    rol: String = "ADMIN",
+    onViewNoticia: (Noticia) -> Unit
 ){
     // Usa solo el ViewModel que recibes por parámetro
     val noticias by noticiaViewModel.noticias.collectAsState()
@@ -85,13 +87,13 @@ fun NoticiasScreen(
                             .fillMaxSize(),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                     ) {
-                        items(noticias.reversed()) { noticia ->
+                        items(noticias) { noticia ->
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
                                     .clickable {
-                                        navController.navigate("detalleNoticia/${noticia.idnoticia}")
+                                        onViewNoticia(noticia)
                                     },
                                 elevation = CardDefaults.cardElevation(2.dp)
                             ) {

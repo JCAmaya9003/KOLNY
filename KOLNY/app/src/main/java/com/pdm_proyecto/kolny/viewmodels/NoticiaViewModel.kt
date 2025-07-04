@@ -4,17 +4,30 @@ import androidx.lifecycle.ViewModel
 import com.pdm_proyecto.kolny.data.models.Noticia
 import com.pdm_proyecto.kolny.data.models.Comentario
 import com.pdm_proyecto.kolny.data.repository.NoticiaRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
+import javax.inject.Inject
 
-class NoticiaViewModel : ViewModel() {
-    private val repository = NoticiaRepository()
-    val noticias: StateFlow<List<Noticia>> = repository.noticias
+@HiltViewModel
+class NoticiaViewModel @Inject constructor(
+    private val repository: NoticiaRepository
+): ViewModel() {
+
+    private val _noticias = MutableStateFlow<List<Noticia>>(emptyList())
+    val noticias: StateFlow<List<Noticia>> = _noticias
+
+    private val _selectedNoticia = MutableStateFlow<Noticia?>(null)
+    val selectedNoticia: StateFlow<Noticia?> = _selectedNoticia
 
     // --------- Comentarios ----------
     private val _comentarios = MutableStateFlow<List<Comentario>>(emptyList())
     val comentarios: StateFlow<List<Comentario>> = _comentarios
+
+    init {
+        loadNoticias()
+    }
 
     // Puedes inicializar con comentarios de ejemplo si quieres:
     init {
@@ -29,8 +42,20 @@ class NoticiaViewModel : ViewModel() {
         )
     }
 
+    fun loadNoticias() {
+        _noticias.value = repository.getAllNoticias()
+    }
+
+    fun selectNoticia(noticia: Noticia) {
+        _selectedNoticia.value = noticia
+    }
+
+    fun clearSelectedNoticia() {
+        _selectedNoticia.value = null
+    }
+
     fun agregarNoticia(titulo: String, contenido: String, categoria: String, idautor: Int) {
-        repository.addNoticia(
+        _noticias.value = repository.addNoticia(
             Noticia(
                 titulo = titulo,
                 contenido = contenido,
