@@ -3,6 +3,7 @@
 
 package com.pdm_proyecto.kolny.data.repository
 
+import com.pdm_proyecto.kolny.data.models.ResidenteDB
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.data.models.UsuarioDB
 import com.pdm_proyecto.kolny.data.models.toUsuarioDB
@@ -47,7 +48,16 @@ class UsuarioRepository @Inject constructor(
                 filter { eq("activo", true) }
             }
             .decodeList<UsuarioDB>()
-            .map { it.toDomain() }//cambiarlo, para que guarden Usuarios y salga la casa
+            .map { usuarioDB ->
+                val usuario = usuarioDB.toDomain()
+
+                // Si es residente, obtenemos la casa
+                val numeroCasa = if (usuario.rol == "RESIDENTE") {
+                    obtenerCasa(usuario.dui)
+                } else null
+
+                usuario.copy(casa = numeroCasa ?: "")
+            }
     }
 
     suspend fun add(/*u: UsuarioDB*/ u: Usuario): List<Usuario> = withContext(Dispatchers.IO) {
@@ -98,4 +108,14 @@ class UsuarioRepository @Inject constructor(
             }
         getAll()
     }
+    private suspend fun obtenerCasa(dui: String): String? = runCatching {
+        supabase
+            .from("residentes")
+            .select {
+                filter { eq("residentedui", dui) }
+                single()
+            }
+            .decodeAs<ResidenteDB>()
+            .numerocasa
+    }.getOrNull()
 }
