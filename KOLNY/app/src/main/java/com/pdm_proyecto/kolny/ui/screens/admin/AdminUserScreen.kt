@@ -94,7 +94,7 @@ fun AdminUserScreen(
                 items(usuarios.size) { index ->
                     UserCard(
                         usuario = usuarios[index],
-                        onDelete = { viewModel.deleteUsuario(usuarios[index]) },
+                        onDelete = { viewModel.deleteUsuario(usuarios[index].dui) },
                         onEditUser = { onEditUser(usuarios[index]) }
                     )
                 }
@@ -155,11 +155,13 @@ fun UserCard(
                         value = usuario.dui,
                         modifier = Modifier.weight(1f)
                     )
-                    CardInfo(
-                        label = "Número de casa:",
-                        value = usuario.casa,
-                        modifier = Modifier.weight(1.4f)
-                    )
+                    if(usuario.casa != null) {
+                        CardInfo(
+                            label = "Número de casa:",
+                            value = usuario.casa,
+                            modifier = Modifier.weight(1.4f)
+                        )
+                    }
                 }
                 Row(
                     modifier = Modifier

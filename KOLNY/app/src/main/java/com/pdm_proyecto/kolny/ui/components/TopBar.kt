@@ -65,8 +65,10 @@ fun KolnyTopBar(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
+                //esta va a ser la imagen del usuario
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Usuario",
@@ -96,7 +98,6 @@ fun KolnyTopBar(
                     Icon(Icons.Default.Close, contentDescription= "Cerrar sesión")
                 }
             }
-
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
@@ -104,7 +105,7 @@ fun KolnyTopBar(
                 when (rol) {
                     "ADMIN" -> {
                         IconButton(onClick = {
-                            navController.navigate(Route.AdminHome.route)
+                            navController.navigate(Route.GestionUsers.route)
                         }) {
                             Icon(Icons.Default.Person, contentDescription = "Usuarios")
                         }
@@ -122,9 +123,7 @@ fun KolnyTopBar(
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
 
-                IconButton(onClick = {
-                    navController.navigate(Route.Eventos.route)
-                }) {
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }
             }

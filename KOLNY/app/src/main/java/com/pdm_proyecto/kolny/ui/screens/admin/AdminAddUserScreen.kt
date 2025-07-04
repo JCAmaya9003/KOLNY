@@ -27,7 +27,6 @@ fun AdminAddUserScreen(viewModel: UsuarioViewModel, navController: NavHostContro
                 })
             }
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -40,4 +39,3 @@ fun AdminAddUserScreen(viewModel: UsuarioViewModel, navController: NavHostContro
         }
     }
 }
-

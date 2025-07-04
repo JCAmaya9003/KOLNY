@@ -5,22 +5,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.pdm_proyecto.kolny.ui.navigation.Route
-import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
 @Composable
 fun VigilanteNavigation(navController: NavHostController) {
     val visitaViewModel: VisitaViewModel = hiltViewModel()
-    val eventViewModel: EventViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = Route.Visitas.route) {
         VigilanteVisitNavigationEntries(
             visitaViewModel = visitaViewModel,
-            navController = navController
-        )
-
-        VigilanteNavigationEntries(
-            eventViewModel = eventViewModel,
             navController = navController
         )
     }

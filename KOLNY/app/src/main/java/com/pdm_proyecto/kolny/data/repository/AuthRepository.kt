@@ -62,6 +62,7 @@ class AuthRepository @Inject constructor(
                 else -> {
                     val ok = row.password == plainPass
                     Log.d("LOGIN", "Texto-plano ok? $ok  (DB='${row.password}')")
+                    Log.d("FECHA NACIMIENTO", "fecha nac: ${row.fecha_nacimiento}')")
                     ok
                 }
             }
@@ -69,7 +70,7 @@ class AuthRepository @Inject constructor(
 
             /* Rol & mapping */
             val (rol, tipoAdmin) = resolverRol(row)
-            Log.d("LOGIN", "TIPO ADMIN: $tipoAdmin")
+            Log.d("LOGIN", "TIPO ADMIN: $tipoAdmin + ROL: $rol")
             mapearResultado(row.toUsuario(rol, tipoAdmin))
         }.getOrElse { ResultadoAcceso.NoRegistrado }
 
