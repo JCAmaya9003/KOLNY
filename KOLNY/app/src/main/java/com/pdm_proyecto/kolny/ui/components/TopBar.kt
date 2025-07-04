@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.R
+import com.pdm_proyecto.kolny.ui.navigation.Route
 
 //SOLO PARA PROBAR
 //luego mejorar lógica(para filtro de roles) y logos
@@ -85,27 +86,30 @@ fun KolnyTopBar(
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if(rol === "ADMIN") {
-                    IconButton(onClick = {
-                        navController.navigate("adminScreen")
-                    }) {
-                        Icon(Icons.Default.Person, contentDescription = "Perfiles")
+                when (rol) {
+                    "ADMIN" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Route.GestionUsers.route)
+                        }) {
+                            Icon(Icons.Default.Person, contentDescription = "Usuarios")
+                        }
+                    }
+                    "VIGILANTE" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Route.Visitas.route)
+                        }) {
+                            Icon(Icons.Default.Face, contentDescription = "Visitas")
+                        }
                     }
                 }
-                if(rol === "VIGILANTE"){
-                    IconButton(onClick = {
-                        navController.navigate("visitScreen")
-                    } ) {
-                        Icon(Icons.Default.Face, contentDescription = "Visitas")
-                    }
-                }
-                IconButton(onClick = { /*dirigir a pantalla de noticias*/ }) {
+
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
-                IconButton(onClick = { /*dirigir a pantalla de eventos*/ }) {
+
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }
             }

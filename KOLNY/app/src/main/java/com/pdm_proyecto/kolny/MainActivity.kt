@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
-import com.pdm_proyecto.kolny.ui.navigation.guard.GuardNavigation
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
 
