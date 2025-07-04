@@ -152,12 +152,3 @@ fun AdminAddUserScreen(
     }
 }
 
-@Preview
-@Composable
-fun FormScreenPreview() {
-    val fakeNavController = rememberNavController() // Esto solo funciona en previews simples
-    AdminAddUserScreen(
-        usuarioViewModel = UsuarioViewModel(UsuarioRepository()),
-        navController = fakeNavController
-    )
-}

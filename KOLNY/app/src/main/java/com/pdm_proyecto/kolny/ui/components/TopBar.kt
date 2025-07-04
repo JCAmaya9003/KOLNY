@@ -37,14 +37,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pdm_proyecto.kolny.R
-import com.pdm_proyecto.kolny.ui.navigation.Routes
+import com.pdm_proyecto.kolny.ui.navigation.Route
 
 //SOLO PARA PROBAR
 //luego mejorar lógica(para filtro de roles) y logos
 //logos, cambiarlos en el drawable
 @Composable
 fun KolnyTopBar(
-    rol: String?,
+    rol: String,
     navController: NavController
 ) {
     Surface(
@@ -92,28 +92,26 @@ fun KolnyTopBar(
                 when (rol) {
                     "ADMIN" -> {
                         IconButton(onClick = {
-                            navController.navigate(Routes.USERS_SCREEN)
+                            navController.navigate(Route.GestionUsers.route)
                         }) {
                             Icon(Icons.Default.Person, contentDescription = "Usuarios")
                         }
                     }
                     "VIGILANTE" -> {
                         IconButton(onClick = {
-                            // Futuro: navega a visitas
+
                         }) {
                             Icon(Icons.Default.Face, contentDescription = "Visitas")
                         }
                     }
                 }
 
-                IconButton(onClick = {
-                    navController.navigate(Routes.HOME_SCREEN)
-                }) {
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
 
                 IconButton(onClick = {
-                    navController.navigate(Routes.EVENT_SCREEN)
+                    navController.navigate(Route.Eventos.route)
                 }) {
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }

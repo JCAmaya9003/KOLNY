@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 
-@Composable
+/*@Composable
 fun SolicitudesScreen(
     viewModel: EventViewModel,
     navController: NavController,
@@ -73,3 +73,4 @@ fun SolicitudesScreen(
         }
     }
 }
+*/

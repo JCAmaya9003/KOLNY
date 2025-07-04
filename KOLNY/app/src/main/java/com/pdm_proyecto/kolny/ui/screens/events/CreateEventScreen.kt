@@ -13,16 +13,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pdm_proyecto.kolny.data.models.Evento
+import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import java.util.*
 
 @Composable
 fun CreateEventScreen(
-    esAdmin: Boolean = true,
+    rol: String,
     viewModel: EventViewModel,
     navController: NavController,
-    onEventoGuardado: () -> Unit
+    onEventoGuardado: () -> Unit,
+    usuario: Usuario //IMPORTANTE, AQUÍ VA A IR EL USUARIO QUE ESTE LOGGEADO
 ) {
     val context = LocalContext.current
     val eventoSeleccionado = viewModel.eventoSeleccionado
@@ -63,7 +65,7 @@ fun CreateEventScreen(
 
     Scaffold(
         topBar = {
-            KolnyTopBar(rol = if (esAdmin) "ADMIN" else "USUARIO", navController = navController)
+            KolnyTopBar(rol = rol, navController = navController)
         }
     ) { padding ->
         Column(
@@ -149,11 +151,11 @@ fun CreateEventScreen(
                         fecha = fecha,
                         horaInicio = horaInicio,
                         horaFin = horaFin,
-                        creadoPor = if (esAdmin) "admin" else "usuario",
-                        aprobado = esAdmin
+                        creadoPor = usuario.nombre,
+                        aprobado = rol == "ADMIN"
                     )
 
-                    if (esAdmin) {
+                    if (rol == "ADMIN") {
                         if (eventoSeleccionado != null) {
                             viewModel.actualizarEvento(evento.copy(id = eventoSeleccionado.id))
                         } else {
@@ -168,7 +170,7 @@ fun CreateEventScreen(
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text(if (esAdmin) "Guardar" else "Enviar")
+                Text(if (rol == "ADMIN") "Guardar" else "Enviar")
             }
         }
 

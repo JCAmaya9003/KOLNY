@@ -15,8 +15,8 @@ import androidx.navigation.NavController
 import com.pdm_proyecto.kolny.data.models.Evento
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.ui.components.SolicitudCard
+import com.pdm_proyecto.kolny.ui.navigation.Route
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
-import com.pdm_proyecto.kolny.ui.navigation.Routes
 
 @Composable
 fun SolicitudesEventosScreen(
@@ -55,7 +55,7 @@ fun SolicitudesEventosScreen(
                         },
                         onVerMas = {
                             viewModel.seleccionarEvento(evento)
-                            navController.navigate(Routes.CREATE_EVENT_SCREEN)
+                            navController.navigate(Route.CreateEvent.route)
                         }
                     )
                 }

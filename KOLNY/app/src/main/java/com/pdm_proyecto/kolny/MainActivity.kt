@@ -9,9 +9,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.pdm_proyecto.kolny.ui.navigation.Routes
+import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
+import com.pdm_proyecto.kolny.ui.navigation.residente.ResidenteNavigation
+import com.pdm_proyecto.kolny.ui.navigation.vigilante.VigilanteNavigation
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
-import com.pdm_proyecto.kolny.ui.screens.admin.EventScreen
+import com.pdm_proyecto.kolny.ui.screens.events.EventScreen
 import com.pdm_proyecto.kolny.ui.screens.admin.SolicitudesEventosScreen
 import com.pdm_proyecto.kolny.ui.screens.events.CreateEventScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
@@ -31,48 +33,21 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val eventViewModel: EventViewModel = viewModel()
 
-                NavHost(
+                /*AdminNavigation(
                     navController = navController,
-                    startDestination = Routes.EVENT_SCREEN
-                ) {
-                    composable(Routes.EVENT_SCREEN) {
-                        EventScreen(
-                            esAdmin = true,
-                            viewModel = eventViewModel,
-                            navController = navController,
-                            onNavigateToCreate = {
-                                navController.navigate(Routes.CREATE_EVENT_SCREEN)
-                            }
-                        )
-                    }
+                    usuarioViewModel = usuarioViewModel,
+                    eventViewModel = eventViewModel
+                )*/
 
-                    composable(Routes.CREATE_EVENT_SCREEN) {
-                        CreateEventScreen(
-                            esAdmin = true,
-                            viewModel = eventViewModel,
-                            navController = navController,
-                            onEventoGuardado = {
-                                navController.popBackStack()
-                            }
-                        )
-                    }
+                /*ResidenteNavigation(
+                    navController = navController,
+                    eventViewModel = eventViewModel
+                )*/
 
-                    composable(Routes.USERS_SCREEN) {
-                        AdminAddUserScreen(
-                            usuarioViewModel = usuarioViewModel,
-                            navController = navController
-                        )
-                    }
-
-                    composable(Routes.EVENT_REQUESTS_SCREEN) {
-                        SolicitudesEventosScreen(
-                            navController = navController,
-                            viewModel = eventViewModel
-                        )
-                    }
-
-
-                }
+                VigilanteNavigation(
+                    navController = navController,
+                    eventViewModel = eventViewModel
+                )
             }
         }
     }

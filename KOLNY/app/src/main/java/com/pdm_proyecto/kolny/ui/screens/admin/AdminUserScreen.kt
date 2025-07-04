@@ -48,11 +48,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.pdm_proyecto.kolny.ui.navigation.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController)
- {
+fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController) {
 
     val usuarios by viewModel.usuarios.collectAsState()
 
@@ -81,9 +81,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController)
                 Icon(Icons.Default.Person, contentDescription = "Usuario")
             }
             Button(
-                onClick = {
-                    /*ir a la screen para agregar usuarios*/
-                },
+                onClick = { navController.navigate(Route.AdminAddUser.route) },
             ) {
                 Text("Agregar Usuario")
             }
@@ -208,12 +206,3 @@ fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
     Spacer(modifier = Modifier.height(4.dp))
 }
 
-@Preview
-@Composable
-fun AdminUserPreview() {
-    val fakeNavController = rememberNavController()
-    AdminUserScreen(
-        viewModel = UsuarioViewModel(UsuarioRepository()),
-        navController = fakeNavController
-    )
-}

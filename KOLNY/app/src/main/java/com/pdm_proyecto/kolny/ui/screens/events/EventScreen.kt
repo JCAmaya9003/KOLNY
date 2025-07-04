@@ -1,4 +1,4 @@
-package com.pdm_proyecto.kolny.ui.screens.admin
+package com.pdm_proyecto.kolny.ui.screens.events
 
 import android.app.DatePickerDialog
 import androidx.compose.foundation.layout.*
@@ -17,14 +17,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
-import com.pdm_proyecto.kolny.ui.navigation.Routes
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.data.models.Evento
+import com.pdm_proyecto.kolny.ui.navigation.Route
 import java.util.*
 
 @Composable
 fun EventScreen(
-    esAdmin: Boolean = true,
+    rol: String,
     viewModel: EventViewModel,
     navController: NavController,
     onNavigateToCreate: () -> Unit
@@ -55,11 +55,15 @@ fun EventScreen(
 
     Scaffold(
         topBar = {
-            KolnyTopBar(rol = if (esAdmin) "ADMIN" else "USUARIO", navController = navController)
+            KolnyTopBar(rol = rol, navController = navController)
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateToCreate) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "Agregar evento")
+            if (rol == "VIGILANTE") {
+                Spacer(modifier = Modifier.width(0.dp))
+            } else {
+                FloatingActionButton(onClick = onNavigateToCreate) {
+                    Icon(imageVector = Icons.Default.Add, contentDescription = "Agregar evento")
+                }
             }
         }
     ) { padding ->
@@ -81,35 +85,37 @@ fun EventScreen(
                     Text(text = if (fechaSeleccionada.isNotEmpty()) fechaSeleccionada else "Todas las fechas")
                 }
 
-                Box {
-                    IconButton(onClick = {
-                        navController.navigate(Routes.EVENT_REQUESTS_SCREEN)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.MailOutline,
-                            contentDescription = "Solicitudes"
-                        )
-                    }
+                if (rol == "ADMIN") {
+                    Box {
+                        IconButton(onClick = {
+                            navController.navigate(Route.EventRequests.route)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.MailOutline,
+                                contentDescription = "Solicitudes"
+                            )
+                        }
 
-                    if (solicitudesPendientesCount > 0) {
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(top = 4.dp, end = 4.dp)
-                                .size(16.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Surface(
-                                shape = MaterialTheme.shapes.small,
-                                color = MaterialTheme.colorScheme.error,
-                                shadowElevation = 4.dp
+                        if (solicitudesPendientesCount > 0) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(top = 4.dp, end = 4.dp)
+                                    .size(16.dp),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = solicitudesPendientesCount.toString(),
-                                    color = MaterialTheme.colorScheme.onError,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    modifier = Modifier.padding(horizontal = 4.dp)
-                                )
+                                Surface(
+                                    shape = MaterialTheme.shapes.small,
+                                    color = MaterialTheme.colorScheme.error,
+                                    shadowElevation = 4.dp
+                                ) {
+                                    Text(
+                                        text = solicitudesPendientesCount.toString(),
+                                        color = MaterialTheme.colorScheme.onError,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        modifier = Modifier.padding(horizontal = 4.dp)
+                                    )
+                                }
                             }
                         }
                     }
@@ -135,7 +141,7 @@ fun EventScreen(
                                 Text("Hora: ${evento.horaInicio} - ${evento.horaFin}")
                             }
 
-                            if (esAdmin) {
+                            if (rol == "ADMIN") {
                                 Row(
                                     horizontalArrangement = Arrangement.End,
                                     modifier = Modifier.fillMaxWidth()
