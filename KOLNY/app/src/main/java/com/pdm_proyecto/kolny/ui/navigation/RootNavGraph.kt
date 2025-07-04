@@ -11,8 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.pdm_proyecto.kolny.data.models.ResultadoAcceso
 import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
+import com.pdm_proyecto.kolny.ui.navigation.residente.ResidenteNavigation
+import com.pdm_proyecto.kolny.ui.navigation.vigilante.VigilanteNavigation
 import com.pdm_proyecto.kolny.ui.screens.login.LoginScreen
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
+import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
@@ -20,10 +23,12 @@ import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 @Composable
 fun RootNavGraph(navController: NavHostController) {
 
-    val usuarioViewModel: UsuarioViewModel = hiltViewModel()
     val ctx = LocalContext.current
+
+    val usuarioViewModel: UsuarioViewModel = hiltViewModel()
     val visitaViewModel: VisitaViewModel = hiltViewModel()
     val eventViewModel: EventViewModel = hiltViewModel()
+    val noticiaViewModel: NoticiaViewModel = hiltViewModel()
 
 
     NavHost(
@@ -70,10 +75,26 @@ fun RootNavGraph(navController: NavHostController) {
         }
 
         /* ----------- SUB-GRÁFICOS ----------- */
-        AdminNavigation(navController,usuarioViewModel,visitaViewModel, eventViewModel)
+        AdminNavigation(
+            navController = navController,
+            usuarioViewModel = usuarioViewModel,
+            visitaViewModel = visitaViewModel,
+            eventViewModel = eventViewModel,
+            noticiaViewModel = noticiaViewModel
+        )
 
-        /*vigilanteGraph(navController)
-        residenteGraph(navController)*/
+        /*VigilanteNavigation(
+            navController = navController,
+            visitaViewModel = visitaViewModel,
+            noticiaViewModel = noticiaViewModel,
+            eventViewModel = eventViewModel
+        )
+
+        ResidenteNavigation(
+            navController = navController,
+            noticiaViewModel = noticiaViewModel,
+            eventViewModel = eventViewModel
+        )*/
     }
 }
 

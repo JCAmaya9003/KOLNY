@@ -10,7 +10,7 @@ import com.pdm_proyecto.kolny.ui.screens.events.EventScreen
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import java.util.Date
 
-fun NavGraphBuilder.ResidenteNavigationEntries(navController: NavHostController, eventViewModel: EventViewModel) {
+fun NavGraphBuilder.ResidenteEventoNavigationEntries(navController: NavHostController, eventViewModel: EventViewModel) {
     composable(Route.Eventos.route) {
         EventScreen(
             viewModel = eventViewModel,
