@@ -35,7 +35,7 @@ class NoticiaViewModel @Inject constructor(
             Comentario(
                 idcomentario = 1,
                 idnoticia = 1,
-                idautor = 123,
+                idautor = "12345678-9",
                 contenido = "¡Excelente noticia!",
                 fechacomentario = Date(System.currentTimeMillis() - 20 * 60 * 1000)
             )
@@ -54,7 +54,7 @@ class NoticiaViewModel @Inject constructor(
         _selectedNoticia.value = null
     }
 
-    fun agregarNoticia(titulo: String, contenido: String, categoria: String, idautor: Int) {
+    fun agregarNoticia(titulo: String, contenido: String, categoria: String, idautor: String) {
         _noticias.value = repository.addNoticia(
             Noticia(
                 titulo = titulo,
@@ -65,7 +65,7 @@ class NoticiaViewModel @Inject constructor(
         )
     }
 
-    fun agregarComentario(idnoticia: Int, idautor: Int, contenido: String) {
+    fun agregarComentario(idnoticia: Int, idautor: String, contenido: String) {
         val nuevo = Comentario(
             idcomentario = (_comentarios.value.maxOfOrNull { it.idcomentario } ?: 0) + 1,
             idnoticia = idnoticia,

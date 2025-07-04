@@ -22,7 +22,7 @@ class NoticiaRepository @Inject constructor() {
                     contenido = "Se informa a los residentes que el jueves se realizará mantenimiento en las áreas verdes comunes. Favor no dejar objetos en los jardines.",
                     fechapublicacion = Date(),
                     categoria = "Aviso",
-                    idautor = 1
+                    idautor = "11111111-1"
                 ),
                 Noticia(
                     idnoticia = autoIncrementId++,
@@ -30,7 +30,7 @@ class NoticiaRepository @Inject constructor() {
                     contenido = "El sábado a las 10 a.m. en la casa comunal se realizará la reunión mensual de la directiva. ¡Participa!",
                     fechapublicacion = Date(),
                     categoria = "Comunidad",
-                    idautor = 2
+                    idautor = "22222222-2"
                 ),
                 Noticia(
                     idnoticia = autoIncrementId++,
@@ -38,7 +38,7 @@ class NoticiaRepository @Inject constructor() {
                     contenido = "La compañía eléctrica ha notificado un corte programado para el martes de 9 a 11 a.m. Prevé con tiempo.",
                     fechapublicacion = Date(),
                     categoria = "Servicio",
-                    idautor = 3
+                    idautor = "33333333-3"
                 )
             )
         )

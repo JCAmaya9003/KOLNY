@@ -5,12 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.pdm_proyecto.kolny.ui.navigation.AdminUserNavigation
-import com.pdm_proyecto.kolny.ui.screens.admin.AdminAddUserScreen
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
-import com.pdm_proyecto.kolny.ui.navigation.NoticiasNavHost
+import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNaivgation
+import com.pdm_proyecto.kolny.ui.navigation.vigilante.VigilanteNavigation
+import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
+import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 
 
 //ESTA ASÍ PARA PRUEBAS
@@ -23,7 +25,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
-                NoticiasNavHost(navController = navController)
+
+                //AdminNaivgation(navController = navController)
+                VigilanteNavigation(navController = navController)
             }
         }
     }

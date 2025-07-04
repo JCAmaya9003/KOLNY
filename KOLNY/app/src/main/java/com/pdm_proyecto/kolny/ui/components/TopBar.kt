@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.R
+import com.pdm_proyecto.kolny.ui.navigation.Route
 
 //SOLO PARA PROBAR
 //luego mejorar lógica(para filtro de roles) y logos
@@ -90,7 +91,7 @@ fun KolnyTopBar(
             ) {
                 if(rol === "ADMIN") {
                     IconButton(onClick = {
-                        navController.navigate("adminUserScreen")
+                        navController.navigate(Route.GestionUsers.route)
                     }) {
                         Icon(Icons.Default.Person, contentDescription = "Perfiles")
                     }
@@ -100,7 +101,7 @@ fun KolnyTopBar(
                         Icon(Icons.Default.Face, contentDescription = "Visitas")
                     }
                 }
-                IconButton(onClick = { navController.navigate("noticias") }) {
+                IconButton(onClick = { navController.navigate(Route.Noticias.route) }) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
                 IconButton(onClick = { /*dirigir a pantalla de eventos*/ }) {

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.data.models.Noticia
+import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import java.text.SimpleDateFormat
@@ -28,8 +29,8 @@ fun DetalleNoticiaScreen(
     noticia: Noticia,
     noticiaViewModel: NoticiaViewModel,
     navController: NavHostController,
-    rol: String = "ADMIN",
-    idautorActual: Int = 123, // Simula el usuario logueado
+    rol: String,
+    usuarioLogueado: Usuario,
     onDone: () -> Unit
 ) {
     val comentarios by noticiaViewModel.comentarios.collectAsState()
@@ -113,34 +114,38 @@ fun DetalleNoticiaScreen(
 
             Spacer(modifier = Modifier.weight(1f))
             Divider()
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-            ) {
-                OutlinedTextField(
-                    value = nuevoComentario,
-                    onValueChange = { nuevoComentario = it },
-                    placeholder = { Text("Escribe un comentario...") },
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                IconButton(
-                    onClick = {
-                        if (nuevoComentario.isNotBlank()) {
-                            noticiaViewModel.agregarComentario(
-                                idnoticia = noticia.idnoticia,
-                                idautor = idautorActual,
-                                contenido = nuevoComentario
-                            )
-                            nuevoComentario = ""
-                            onDone()
-                        }
-                    },
-                    enabled = nuevoComentario.isNotBlank()
+            if (rol == "VIGILANTE") {
+                Spacer(modifier = Modifier.height(0.dp))
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp)
                 ) {
-                    Icon(Icons.Default.Send, contentDescription = "Enviar")
+                    OutlinedTextField(
+                        value = nuevoComentario,
+                        onValueChange = { nuevoComentario = it },
+                        placeholder = { Text("Escribe un comentario...") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(
+                        onClick = {
+                            if (nuevoComentario.isNotBlank()) {
+                                noticiaViewModel.agregarComentario(
+                                    idnoticia = noticia.idnoticia,
+                                    idautor = usuarioLogueado.dui,
+                                    contenido = nuevoComentario
+                                )
+                                nuevoComentario = ""
+                                onDone()
+                            }
+                        },
+                        enabled = nuevoComentario.isNotBlank()
+                    ) {
+                        Icon(Icons.Default.Send, contentDescription = "Enviar")
+                    }
                 }
             }
         }

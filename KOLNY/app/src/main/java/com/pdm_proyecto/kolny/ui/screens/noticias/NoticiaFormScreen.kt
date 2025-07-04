@@ -9,14 +9,17 @@ import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pdm_proyecto.kolny.data.models.Usuario
 
 @Composable
 fun NoticiaFormScreen(
     navController: NavHostController,
-    noticiaViewModel: NoticiaViewModel
+    noticiaViewModel: NoticiaViewModel,
+    rol: String,
+    usuarioLogueado: Usuario
 ) {
     Scaffold(
-        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) }
+        topBar = { KolnyTopBar(rol = rol, navController = navController) }
     ) { innerPadding ->
         var titulo by remember { mutableStateOf("") }
         var contenido by remember { mutableStateOf("") }
@@ -63,7 +66,7 @@ fun NoticiaFormScreen(
                         titulo = titulo,
                         contenido = contenido,
                         categoria = categoria,
-                        idautor = 1 // puedes poner aquí el usuario logueado
+                        idautor = usuarioLogueado.dui// puedes poner aquí el usuario logueado
                     )
                     navController.popBackStack() // regresa a la lista
                 },

@@ -8,5 +8,5 @@ data class Noticia(
     val contenido: String,
     val fechapublicacion: Date = Date(),
     val categoria: String,
-    val idautor: Int
+    val idautor: String
 )

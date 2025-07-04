@@ -18,12 +18,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.foundation.clickable
 import com.pdm_proyecto.kolny.data.models.Noticia
+import com.pdm_proyecto.kolny.ui.navigation.Route
 
 @Composable
 fun NoticiasScreen(
     navController: NavHostController,
     noticiaViewModel: NoticiaViewModel,
-    rol: String = "ADMIN",
+    rol: String,
     onViewNoticia: (Noticia) -> Unit
 ){
     // Usa solo el ViewModel que recibes por parámetro
@@ -60,18 +61,22 @@ fun NoticiasScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             // Botón "Agregar Noticia"
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Button(
-                    onClick = { navController.navigate("noticiaForm") },
-                    modifier = Modifier.fillMaxWidth(0.6f)
+            if (rol == "VIGILANTE"){
+                Spacer(modifier = Modifier.height(0.dp))
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("Agregar Noticia")
+                    Button(
+                        onClick = { navController.navigate(Route.CreateNoticia.route) },
+                        modifier = Modifier.fillMaxWidth(0.6f)
+                    ) {
+                        Text("Agregar Noticia")
+                    }
                 }
             }
 
