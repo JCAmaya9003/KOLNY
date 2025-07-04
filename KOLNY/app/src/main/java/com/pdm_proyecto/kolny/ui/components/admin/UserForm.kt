@@ -84,6 +84,7 @@ fun UserForm(
             formViewModel.setInitialFormattedValue("dui", TextFieldValue(usuario.dui))
             formViewModel.setInitialTextValue("password", TextFieldValue())
             usuario.casa?.let { formViewModel.setInitialTextValue("casa", TextFieldValue(it)) }
+            selectedRol = usuario.rol
         }
     }
 

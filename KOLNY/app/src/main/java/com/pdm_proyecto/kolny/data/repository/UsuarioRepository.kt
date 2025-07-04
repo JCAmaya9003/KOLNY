@@ -3,6 +3,7 @@
 
 package com.pdm_proyecto.kolny.data.repository
 
+import android.util.Log
 import com.pdm_proyecto.kolny.data.models.ResidenteDB
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.data.models.UsuarioDB
@@ -84,9 +85,10 @@ class UsuarioRepository @Inject constructor(
 
     suspend fun update(/*u: UsuarioDB*/ u: Usuario): List<Usuario> = withContext(Dispatchers.IO) {
         val usuarioDB = u.toUsuarioDB()
+        Log.d("usuario", "usuario + $usuarioDB")
         supabase.from("usuarios")
-            .update(u) { filter { eq("dui", usuarioDB.dui) } }
-
+            .update(usuarioDB) { filter { eq("dui", usuarioDB.dui) } }
+        Log.d("a", "si paso el update")
         if(u.rol == "RESIDENTE"){
             supabase.from("residentes")
                 .update(
