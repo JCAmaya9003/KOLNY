@@ -50,6 +50,16 @@ class UsuarioRepository @Inject constructor(
             .map { it.toDomain() }//cambiarlo, para que guarden Usuarios y salga la casa
     }
 
+    suspend fun getUsuarioByEmail(email: String): Usuario? = withContext(Dispatchers.IO) {
+        supabase.from("usuarios")
+            .select {
+                filter { eq("correo", email) }
+            }
+            .decodeList<UsuarioDB>()
+            .map { it.toDomain() }
+            .firstOrNull()
+    }
+
     suspend fun add(/*u: UsuarioDB*/ u: Usuario): List<Usuario> = withContext(Dispatchers.IO) {
 
         val usuarioDB = u.toUsuarioDB()

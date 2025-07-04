@@ -10,11 +10,13 @@ import com.pdm_proyecto.kolny.ui.screens.noticias.DetalleNoticiaScreen
 import com.pdm_proyecto.kolny.ui.screens.noticias.NoticiasScreen
 import com.pdm_proyecto.kolny.ui.screens.noticias.NoticiaFormScreen
 import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
+import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import java.util.Date
 
 fun NavGraphBuilder.ResidenteNoticiaNavigationEntries(
     navController: NavHostController,
-    noticiaViewModel: NoticiaViewModel
+    noticiaViewModel: NoticiaViewModel,
+    usuarioViewModel: UsuarioViewModel
 ) {
     composable(Route.Noticias.route) {
         NoticiasScreen(
@@ -30,45 +32,27 @@ fun NavGraphBuilder.ResidenteNoticiaNavigationEntries(
 
     composable(Route.ViewNoticia.route) {
         val noticia = noticiaViewModel.selectedNoticia.collectAsState().value
-        if (noticia != null) {
+        val loggedUsuario = usuarioViewModel.loggedUser.collectAsState().value
+        if (noticia != null && loggedUsuario != null) {
             DetalleNoticiaScreen(
                 noticia = noticia,
                 noticiaViewModel = noticiaViewModel,
                 navController = navController,
                 rol = "RESIDENTE",
-                onDone = {
-                    noticiaViewModel.clearSelectedNoticia()
-                    navController.popBackStack()
-                },
-                usuarioLogueado = Usuario(
-                    dui = "12345678-1",
-                    nombre = "RESIDENTE",
-                    telefono = "1234-5678",
-                    fechaNacimiento = Date(),
-                    casa = "casa",
-                    email = "email@email.com",
-                    password = "password",
-                    rol = "RESIDENTE"
-                )
+                usuarioLogueado = loggedUsuario
             )
         }
     }
 
     composable(Route.CreateNoticia.route){
-        NoticiaFormScreen(
-            navController = navController,
-            noticiaViewModel = noticiaViewModel,
-            rol = "RESIDENTE",
-            usuarioLogueado = Usuario(
-                dui = "12345678-1",
-                nombre = "RESIDENTE",
-                telefono = "1234-5678",
-                fechaNacimiento = Date(),
-                casa = "casa",
-                email = "email@email.com",
-                password = "password",
-                rol = "RESIDENTE"
+        val loggedUsuario = usuarioViewModel.loggedUser.collectAsState().value
+        if (loggedUsuario != null) {
+            NoticiaFormScreen(
+                navController = navController,
+                noticiaViewModel = noticiaViewModel,
+                rol = "RESIDENTE",
+                usuarioLogueado = loggedUsuario
             )
-        )
+        }
     }
 }

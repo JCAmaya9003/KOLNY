@@ -31,7 +31,6 @@ fun DetalleNoticiaScreen(
     navController: NavHostController,
     rol: String,
     usuarioLogueado: Usuario,
-    onDone: () -> Unit
 ) {
     val comentarios by noticiaViewModel.comentarios.collectAsState()
     var nuevoComentario by remember { mutableStateOf("") }
@@ -99,7 +98,7 @@ fun DetalleNoticiaScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
-                                Text("Usuario #${comentario.idautor}", fontWeight = FontWeight.Bold, color = Color.White)
+                                Text(usuarioLogueado.nombre, fontWeight = FontWeight.Bold, color = Color.White)
                                 Text(comentario.contenido, color = Color.White)
                                 Text(
                                     "Hace ${obtenerTiempo(comentario.fechacomentario)}",
@@ -139,7 +138,6 @@ fun DetalleNoticiaScreen(
                                     contenido = nuevoComentario
                                 )
                                 nuevoComentario = ""
-                                onDone()
                             }
                         },
                         enabled = nuevoComentario.isNotBlank()

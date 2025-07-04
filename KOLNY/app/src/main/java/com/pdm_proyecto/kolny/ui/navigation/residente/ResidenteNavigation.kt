@@ -11,19 +11,23 @@ import androidx.navigation.compose.composable
 import com.pdm_proyecto.kolny.ui.navigation.Route
 import com.pdm_proyecto.kolny.ui.screens.events.EventScreen
 import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
+import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 
 fun NavGraphBuilder.ResidenteNavigation(
     navController: NavHostController,
     eventViewModel: EventViewModel,
-    noticiaViewModel: NoticiaViewModel
+    noticiaViewModel: NoticiaViewModel,
+    usuarioViewModel: UsuarioViewModel
 ) {
 
     ResidenteEventoNavigationEntries(
         navController = navController,
-        eventViewModel = eventViewModel
+        eventViewModel = eventViewModel,
+        usuarioViewModel = usuarioViewModel
     )
     ResidenteNoticiaNavigationEntries(
         navController = navController,
-        noticiaViewModel = noticiaViewModel
+        noticiaViewModel = noticiaViewModel,
+        usuarioViewModel = usuarioViewModel
     )
 }
