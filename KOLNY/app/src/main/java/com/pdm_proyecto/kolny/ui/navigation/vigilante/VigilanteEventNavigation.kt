@@ -7,7 +7,7 @@ import com.pdm_proyecto.kolny.ui.navigation.Route
 import com.pdm_proyecto.kolny.ui.screens.events.EventScreen
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 
-fun NavGraphBuilder.VigilanteNavigationEntries(navController: NavHostController, eventViewModel: EventViewModel) {
+fun NavGraphBuilder.VigilanteEventoNavigationEntries(navController: NavHostController, eventViewModel: EventViewModel) {
     composable(Route.Eventos.route) {
         EventScreen(
             rol = "VIGILANTE",

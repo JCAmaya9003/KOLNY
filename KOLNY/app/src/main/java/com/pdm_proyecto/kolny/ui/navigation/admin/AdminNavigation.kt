@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.pdm_proyecto.kolny.ui.navigation.Route
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminScreen
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
+import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
@@ -16,13 +17,13 @@ fun NavGraphBuilder.AdminNavigation(
     navController: NavHostController,
     usuarioViewModel: UsuarioViewModel,
     visitaViewModel: VisitaViewModel,
-    eventViewModel: EventViewModel
+    eventViewModel: EventViewModel,
+    noticiaViewModel: NoticiaViewModel
 ) {
 
     composable(Route.AdminRoot.route) {
         AdminScreen(navController)
     }
-
     AdminUserNavigationEntries(
         navController = navController,
         usuarioViewModel = usuarioViewModel
@@ -31,9 +32,12 @@ fun NavGraphBuilder.AdminNavigation(
         navController = navController,
         visitaViewModel = visitaViewModel
     )
-
     AdminEventNavigationEntries(
         navController = navController,
         eventViewModel = eventViewModel
+    )
+    AdminNoticiaNavigationEntries(
+        navController = navController,
+        noticiaViewModel = noticiaViewModel
     )
 }
