@@ -32,14 +32,12 @@ fun AdminScreen(navController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = {
-                navController.navigate("admin_gestion_usuarios")
                 navController.navigate(Route.GestionUsers.route)
             }) {
                 Text(text = "Administrar usuarios")
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
-                navController.navigate("admin_reportes")
                 navController.navigate(Route.Visitas.route)
             }) {
                 Text(text = "Administrar visitas")

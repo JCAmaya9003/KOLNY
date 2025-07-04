@@ -13,6 +13,7 @@ import com.pdm_proyecto.kolny.data.models.ResultadoAcceso
 import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
 import com.pdm_proyecto.kolny.ui.screens.login.LoginScreen
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
+import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -20,6 +21,8 @@ fun RootNavGraph(navController: NavHostController) {
 
     val usuarioViewModel: UsuarioViewModel = hiltViewModel()
     val ctx = LocalContext.current
+    val visitaViewModel: VisitaViewModel = hiltViewModel()
+
 
     NavHost(
         navController = navController,
@@ -65,7 +68,7 @@ fun RootNavGraph(navController: NavHostController) {
         }
 
         /* ----------- SUB-GRÁFICOS ----------- */
-        AdminNavigation(navController,usuarioViewModel)
+        AdminNavigation(navController,usuarioViewModel,visitaViewModel)
 
         /*vigilanteGraph(navController)
         residenteGraph(navController)*/

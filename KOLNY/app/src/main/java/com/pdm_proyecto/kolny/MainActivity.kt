@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
             KOLNYTheme {
                 val navController = rememberNavController()
                 RootNavGraph(navController)
-                AdminNavigation(navController = navController)
             }
         }
     }
