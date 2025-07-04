@@ -4,16 +4,10 @@
 package com.pdm_proyecto.kolny.data.repository
 
 import com.pdm_proyecto.kolny.data.models.Usuario
-import java.util.Calendar
-import java.util.Date
+import com.pdm_proyecto.kolny.utils.createDate
+import javax.inject.Inject
 
-fun createDate(year: Int, month: Int, day: Int): Date {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month - 1, day)
-    return calendar.time
-}
-
-class UsuarioRepository() {
+class UsuarioRepository @Inject constructor() {
     private val usuarios = mutableListOf<Usuario>()
 
     init {
@@ -29,7 +23,7 @@ class UsuarioRepository() {
                     password = "password123",
                     activo = true,
                     rol = "ADMIN",
-                    tipoAdmin = "SUPER_ADMIN"
+                    tipoAdmin = "DESARROLLADOR"
                 ),
                 Usuario(
                     dui = "23456781-9",
@@ -40,7 +34,7 @@ class UsuarioRepository() {
                     email = "maria.garcia@example.com",
                     password = "securepass",
                     activo = true,
-                    rol = "USUARIO",
+                    rol = "VIGILANTE",
                     tipoAdmin = null
                 ),
                 Usuario(
@@ -62,10 +56,10 @@ class UsuarioRepository() {
                     fechaNacimiento = createDate(1992, 11, 30),
                     casa = "4D",
                     email = "ana.martinez@example.com",
-                    password = "anita92",
+                    password = "anita9269",
                     activo = true,
                     rol = "ADMIN",
-                    tipoAdmin = "EDITOR"
+                    tipoAdmin = "DIRECTIVA"
                 ),
                 Usuario(
                     dui = "56781234-9",
@@ -74,7 +68,7 @@ class UsuarioRepository() {
                     fechaNacimiento = createDate(1988, 7, 5),
                     casa = "5E",
                     email = "luisa.rodriguez@example.com",
-                    password = "luisa88",
+                    password = "luisa8869",
                     activo = true,
                     rol = "USUARIO",
                     tipoAdmin = null
@@ -92,16 +86,16 @@ class UsuarioRepository() {
                     tipoAdmin = null
                 ),
                 Usuario(
-                    dui = "789123456-9",
+                    dui = "78912345-6",
                     nombre = "Sofía Ramírez",
                     telefono = "2257-7777",
                     fechaNacimiento = createDate(1993, 9, 25),
                     casa = "7G",
                     email = "sofia.ramirez@example.com",
-                    password = "sofia93",
+                    password = "sofia9369",
                     activo = true,
                     rol = "ADMIN",
-                    tipoAdmin = "MODERADOR"
+                    tipoAdmin = "DIRECTIVA"
                 )
             )
         )
@@ -112,6 +106,19 @@ class UsuarioRepository() {
     fun addUsuario(usuario: Usuario): List<Usuario> {
         usuarios.add(usuario)
         return usuarios.toList() //que el dao devuelva la lista de usuarios actualizada
+    }
+
+    fun updateUsuario(usuarioActualizado: Usuario): List<Usuario> {
+        val index = usuarios.indexOfFirst { it.dui == usuarioActualizado.dui }
+        if (index != -1) {
+            usuarios[index] = usuarioActualizado
+        }
+        return usuarios.toList()
+    }
+
+    fun deleteUsuario(usuario: Usuario): List<Usuario> {
+        usuarios.removeAll { it.dui == usuario.dui }
+        return usuarios.toList()
     }
 
     fun getUsuarioByDui(dui: String) : Usuario? = usuarios.find { it.dui == dui }

@@ -4,15 +4,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.data.repository.UsuarioRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /*en lugar del repository va a ir el dao*/
-class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() {
+@HiltViewModel
+class UsuarioViewModel @Inject constructor(
+    private val repository: UsuarioRepository
+) : ViewModel() {
 
     private val _usuarios = MutableStateFlow<List<Usuario>>(emptyList())
     val usuarios: StateFlow<List<Usuario>> = _usuarios
+
+    private val _selectedUsuario = MutableStateFlow<Usuario?>(null)
+    val selectedUsuario: StateFlow<Usuario?> = _selectedUsuario
+
+    fun selectUsuario(usuario: Usuario) {
+        _selectedUsuario.value = usuario
+    }
+
+    fun clearSelectedUsuario() {
+        _selectedUsuario.value = null
+    }
 
     init {
         loadUsuarios()
@@ -46,14 +62,7 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     fun editUsuario(usuario: Usuario) {
         viewModelScope.launch {
             try {
-                val currentList = _usuarios.value.toMutableList()
-                val index = currentList.indexOfFirst { it.dui == usuario.dui }
-                if (index != -1) {
-                    currentList.removeAt(index)
-                    currentList.add(index, usuario)
-                    _usuarios.value = currentList
-                    /*poner aquí el dao para editar*/
-                }
+                _usuarios.value = repository.updateUsuario(usuario).toList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -63,9 +72,7 @@ class UsuarioViewModel(private val repository: UsuarioRepository) : ViewModel() 
     fun deleteUsuario(usuario: Usuario) {
         viewModelScope.launch {
             try {
-                val updatedList = _usuarios.value.filterNot { it.dui == usuario.dui }
-                _usuarios.value = updatedList
-                /*poner aquí el dao para eliminar*/
+                _usuarios.value = repository.deleteUsuario(usuario).toList()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

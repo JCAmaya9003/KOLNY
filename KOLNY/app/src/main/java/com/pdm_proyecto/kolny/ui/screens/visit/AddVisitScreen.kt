@@ -1,24 +1,30 @@
-package com.pdm_proyecto.kolny.ui.screens.admin
+package com.pdm_proyecto.kolny.ui.screens.visit
 
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import androidx.navigation.NavHostController
-import com.pdm_proyecto.kolny.ui.components.admin.UserForm
+import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
+import com.pdm_proyecto.kolny.ui.components.visit.VisitForm
+import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
 @Composable
-fun AdminAddUserScreen(viewModel: UsuarioViewModel, navController: NavHostController) {
+fun AddVisitScreen(
+    rol: String,
+    viewModel: VisitaViewModel,
+    navController: NavHostController
+) {
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) },
+        topBar = { KolnyTopBar(rol = rol, navController = navController) },
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
@@ -27,17 +33,15 @@ fun AdminAddUserScreen(viewModel: UsuarioViewModel, navController: NavHostContro
                 })
             }
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
         ){
-            UserForm(
-                usuarioViewModel = viewModel,
+            VisitForm(
+                visitaViewModel = viewModel,
                 onSubmitSuccess = { navController.popBackStack() }
             )
         }
     }
 }
-

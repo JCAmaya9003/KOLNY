@@ -44,20 +44,25 @@ import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.utils.formatDate
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.pdm_proyecto.kolny.ui.navigation.Route
+import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import com.pdm_proyecto.kolny.ui.components.CardInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController) {
-
+fun AdminUserScreen(
+    viewModel: UsuarioViewModel,
+    navController: NavHostController,
+    onAddUser: () -> Unit = {},
+    onEditUser: (Usuario) -> Unit = {}
+) {
     val usuarios by viewModel.usuarios.collectAsState()
 
     Scaffold (
-        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) },
+        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) }
     ){ innerPadding ->
         Column(
             modifier = Modifier
@@ -81,7 +86,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController) {
                 Icon(Icons.Default.Person, contentDescription = "Usuario")
             }
             Button(
-                onClick = { navController.navigate(Route.AdminAddUser.route) },
+                onClick = { onAddUser() },
             ) {
                 Text("Agregar Usuario")
             }
@@ -90,6 +95,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController) {
                     UserCard(
                         usuario = usuarios[index],
                         onDelete = { viewModel.deleteUsuario(usuarios[index]) },
+                        onEditUser = { onEditUser(usuarios[index]) }
                     )
                 }
             }
@@ -101,6 +107,7 @@ fun AdminUserScreen(viewModel: UsuarioViewModel, navController: NavController) {
 fun UserCard(
     usuario: Usuario,
     onDelete: () -> Unit = {},
+    onEditUser: (Usuario) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
@@ -122,7 +129,8 @@ fun UserCard(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = rememberAsyncImagePainter(
+                        model = usuario.fotoPerfil ?: R.drawable.ic_launcher_foreground),
                     contentDescription = "Usuario",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -137,17 +145,17 @@ fun UserCard(
                     .padding(horizontal = 12.dp)
                     .fillMaxWidth()
             ) {
-                UserInfo(label = "Nombre:", value = usuario.nombre)
+                CardInfo(label = "Nombre:", value = usuario.nombre)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    UserInfo(
+                    CardInfo(
                         label = "DUI:",
                         value = usuario.dui,
                         modifier = Modifier.weight(1f)
                     )
-                    UserInfo(
+                    CardInfo(
                         label = "Número de casa:",
                         value = usuario.casa,
                         modifier = Modifier.weight(1.4f)
@@ -157,25 +165,25 @@ fun UserCard(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    UserInfo(
+                    CardInfo(
                         label = "Teléfono:",
                         value = usuario.telefono,
                         modifier = Modifier.weight(1f)
                     )
-                    UserInfo(
+                    CardInfo(
                         label = "Fecha de nacimiento:",
                         value = formatDate(usuario.fechaNacimiento),
                         modifier = Modifier.weight(1.4f)
                     )
                 }
-                UserInfo(label = "Correo Electrónico:", value = usuario.email)
+                CardInfo(label = "Correo Electrónico:", value = usuario.email)
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                IconButton(onClick = { /*ir a la screen de editar*/ }) {
+                IconButton(onClick = { onEditUser(usuario) }) {
                     Icon(Icons.Default.Edit, contentDescription = "Editar")
                 }
                 IconButton(onClick = onDelete) {
@@ -189,20 +197,3 @@ fun UserCard(
         }
     }
 }
-
-@Composable
-fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .padding(4.dp)
-    ) {
-        Text(
-            text = label,
-            fontStyle = FontStyle.Italic,
-            color = Color.Gray,
-        )
-        Text( text = value )
-    }
-    Spacer(modifier = Modifier.height(4.dp))
-}
-
