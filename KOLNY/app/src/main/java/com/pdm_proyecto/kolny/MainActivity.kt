@@ -8,6 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.RootNavGraph
+import androidx.navigation.compose.rememberNavController
+import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
             KOLNYTheme {
                 val navController = rememberNavController()
                 RootNavGraph(navController)
+                AdminNavigation(navController = navController)
             }
         }
     }

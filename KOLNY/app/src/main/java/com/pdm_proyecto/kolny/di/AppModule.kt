@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.pdm_proyecto.kolny.BuildConfig
 //import com.pdm_proyecto.kolny.data.database.SupabaseClient
 import com.pdm_proyecto.kolny.data.repository.UsuarioRepository
+import com.pdm_proyecto.kolny.data.repository.VisitaRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,4 +49,10 @@ object AppModule {
     class LoginViewModel @Inject constructor(
         private val usuarioRepository: UsuarioRepository
     ) : ViewModel()
+
+    @Provides
+    @Singleton
+    fun provideVisitaRepository(): VisitaRepository {
+        return VisitaRepository()
+    }
 }

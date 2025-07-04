@@ -13,7 +13,11 @@ import com.pdm_proyecto.kolny.ui.navigation.Route
 
 //NAVEGACIÓN SOLO PARA MOVERSE ENTRE PANTALLAS DE CRUD DE USUARIO
 
-fun NavGraphBuilder.AdminUserNavigationEntries(navController: NavHostController, usuarioViewModel: UsuarioViewModel) {
+fun NavGraphBuilder.AdminUserNavigationEntries(
+    navController: NavHostController,
+    usuarioViewModel: UsuarioViewModel
+) {
+
     composable(Route.GestionUsers.route) {
         AdminUserScreen(
             viewModel = usuarioViewModel,
@@ -50,5 +54,3 @@ fun NavGraphBuilder.AdminUserNavigationEntries(navController: NavHostController,
         }
     }
 }
-
-

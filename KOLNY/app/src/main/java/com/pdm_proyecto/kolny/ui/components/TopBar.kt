@@ -100,45 +100,33 @@ fun KolnyTopBar(
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if(rol === "ADMIN") {
-                    IconButton(onClick = {
-                        navController.navigate("adminUserScreen")
-                    }) {
-                        Icon(Icons.Default.Person, contentDescription = "Perfiles")
+                when (rol) {
+                    "ADMIN" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Route.GestionUsers.route)
+                        }) {
+                            Icon(Icons.Default.Person, contentDescription = "Usuarios")
+                        }
+                    }
+                    "VIGILANTE" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Route.Visitas.route)
+                        }) {
+                            Icon(Icons.Default.Face, contentDescription = "Visitas")
+                        }
                     }
                 }
-                if(rol === "VIGILANTE"){
-                    IconButton(onClick = { /*dirigir a pantalla de visitas*/ } ) {
-                        Icon(Icons.Default.Face, contentDescription = "Visitas")
-                    }
-                }
-                IconButton(onClick = { /*dirigir a pantalla de noticias*/ }) {
+
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
-                IconButton(onClick = { /*dirigir a pantalla de eventos*/ }) {
+
+                IconButton(onClick = {}) {
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }
             }
-        }
-    }
-}
-
-@Preview
-@ExperimentalMaterial3Api
-@Composable
-fun TopBarPreview() {
-    Scaffold(
-        topBar = { KolnyTopBar(rol = "VIGILANTE", navController = NavHostController(LocalContext.current)) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            Text("si funciona")
         }
     }
 }

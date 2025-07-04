@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 
+import com.pdm_proyecto.kolny.ui.navigation.Route
+
 @Composable
 fun AdminScreen(navController: NavHostController) {
 
@@ -31,12 +33,14 @@ fun AdminScreen(navController: NavHostController) {
         ) {
             Button(onClick = {
                 navController.navigate("admin_gestion_usuarios")
+                navController.navigate(Route.GestionUsers.route)
             }) {
                 Text(text = "Administrar usuarios")
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
                 navController.navigate("admin_reportes")
+                navController.navigate(Route.Visitas.route)
             }) {
                 Text(text = "Administrar visitas")
             }

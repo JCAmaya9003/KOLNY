@@ -4,15 +4,8 @@
 package com.pdm_proyecto.kolny.data.repository
 
 import com.pdm_proyecto.kolny.data.models.Usuario
-import java.util.Calendar
-import java.util.Date
+import com.pdm_proyecto.kolny.utils.createDate
 import javax.inject.Inject
-
-fun createDate(year: Int, month: Int, day: Int): Date {
-    val calendar = Calendar.getInstance()
-    calendar.set(year, month - 1, day)
-    return calendar.time
-}
 
 class UsuarioRepository @Inject constructor() {
     private val usuarios = mutableListOf<Usuario>()
@@ -30,7 +23,7 @@ class UsuarioRepository @Inject constructor() {
                     password = "password123",
                     activo = true,
                     rol = "ADMIN",
-                    tipoAdmin = "SUPER_ADMIN"
+                    tipoAdmin = "DESARROLLADOR"
                 ),
                 Usuario(
                     dui = "23456781-9",
@@ -41,7 +34,7 @@ class UsuarioRepository @Inject constructor() {
                     email = "maria.garcia@example.com",
                     password = "securepass",
                     activo = true,
-                    rol = "USUARIO",
+                    rol = "VIGILANTE",
                     tipoAdmin = null
                 ),
                 Usuario(
@@ -66,7 +59,7 @@ class UsuarioRepository @Inject constructor() {
                     password = "anita9269",
                     activo = true,
                     rol = "ADMIN",
-                    tipoAdmin = "EDITOR"
+                    tipoAdmin = "DIRECTIVA"
                 ),
                 Usuario(
                     dui = "56781234-9",
@@ -102,7 +95,7 @@ class UsuarioRepository @Inject constructor() {
                     password = "sofia9369",
                     activo = true,
                     rol = "ADMIN",
-                    tipoAdmin = "MODERADOR"
+                    tipoAdmin = "DIRECTIVA"
                 )
             )
         )
