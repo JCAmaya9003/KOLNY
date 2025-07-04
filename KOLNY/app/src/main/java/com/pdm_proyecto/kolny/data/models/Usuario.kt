@@ -8,7 +8,7 @@ data class Usuario(
     val nombre: String,
     val telefono: String,
     val fechaNacimiento: Date,
-    val casa: String,
+    val casa: String? = null,
     val email: String,
     val password: String,
     val activo: Boolean = true,

@@ -1,12 +1,14 @@
 package com.pdm_proyecto.kolny.data.models
 
-import java.util.Date
+import kotlinx.serialization.Serializable
+import kotlinx.datetime.LocalDateTime
 
+@Serializable
 data class Noticia(
-    val idnoticia: Int = 0, // Puedes dejarlo en 0 o null cuando sea auto-incremental
+    val id: String,
     val titulo: String,
     val contenido: String,
-    val fechapublicacion: Date = Date(),
-    val categoria: String,
-    val idautor: String
+    val fechaPublicacion: LocalDateTime,
+    val autorId: String  // Relación con Usuario
+
 )

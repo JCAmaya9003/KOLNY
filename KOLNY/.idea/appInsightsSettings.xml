@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.pdm_proyecto.kolny" />
+                  <option name="mobileSdkAppId" value="1:308716260519:android:181d8be3e3b1a4f3145f82" />
+                  <option name="projectId" value="kolny-ecb49" />
+                  <option name="projectNumber" value="308716260519" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

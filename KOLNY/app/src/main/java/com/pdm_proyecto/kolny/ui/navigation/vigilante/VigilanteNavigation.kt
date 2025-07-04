@@ -5,19 +5,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.pdm_proyecto.kolny.ui.navigation.Route
-import com.pdm_proyecto.kolny.viewmodels.NoticiaViewModel
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
+import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
 @Composable
-fun VigilanteNavigation(
-    navController: NavHostController
-) {
-    val noticiaViewModel: NoticiaViewModel = hiltViewModel()
+fun VigilanteNavigation(navController: NavHostController) {
+    val visitaViewModel: VisitaViewModel = hiltViewModel()
 
-    NavHost(navController = navController, startDestination = Route.Noticias.route) {
-        VigilanteNoticiaNavigationEntries(
-            navController = navController,
-            noticiaViewModel = noticiaViewModel
+    NavHost(navController = navController, startDestination = Route.Visitas.route) {
+        VigilanteVisitNavigationEntries(
+            visitaViewModel = visitaViewModel,
+            navController = navController
         )
     }
 }

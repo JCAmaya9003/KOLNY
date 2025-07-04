@@ -25,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,6 +53,9 @@ fun KolnyTopBar(
         color = Color(0xFFD0F1FF),
         shadowElevation = 4.dp,
     ) {
+
+        val firebase = remember { com.google.firebase.auth.FirebaseAuth.getInstance() }
+
         Column(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
@@ -80,51 +84,50 @@ fun KolnyTopBar(
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center
                 )
-                IconButton(onClick = { /*cerrar sesión*/ }){
+                IconButton(onClick = {
+                    /* 1. Firebase logout */
+                    firebase.signOut()
+
+                    /* 2. Navegar a login limpiando el backstack */
+                    navController.navigate(Route.Login.route) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
+                })
+                {
                     Icon(Icons.Default.Close, contentDescription= "Cerrar sesión")
                 }
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if(rol === "ADMIN") {
-                    IconButton(onClick = {
-                        navController.navigate(Route.GestionUsers.route)
-                    }) {
-                        Icon(Icons.Default.Person, contentDescription = "Perfiles")
+                when (rol) {
+                    "ADMIN" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Route.AdminRoot.route)
+                        }) {
+                            Icon(Icons.Default.Person, contentDescription = "Usuarios")
+                        }
                     }
-                }
-                if(rol === "VIGILANTE"){
-                    IconButton(onClick = { /*dirigir a pantalla de visitas*/ } ) {
-                        Icon(Icons.Default.Face, contentDescription = "Visitas")
+                    "VIGILANTE" -> {
+                        IconButton(onClick = {
+                            navController.navigate(Route.Visitas.route)
+                        }) {
+                            Icon(Icons.Default.Face, contentDescription = "Visitas")
+                        }
                     }
                 }
                 IconButton(onClick = { navController.navigate(Route.Noticias.route) }) {
                     Icon(Icons.Default.Home, contentDescription = "Noticias")
                 }
-                IconButton(onClick = { /*dirigir a pantalla de eventos*/ }) {
+
+                IconButton(onClick = {
+                    navController.navigate(Route.Eventos.route)
+                }) {
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }
             }
-        }
-    }
-}
-
-@Preview
-@ExperimentalMaterial3Api
-@Composable
-fun TopBarPreview() {
-    Scaffold(
-        topBar = { KolnyTopBar(rol = "VIGILANTE", navController = NavHostController(LocalContext.current)) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            Text("si funciona")
         }
     }
 }

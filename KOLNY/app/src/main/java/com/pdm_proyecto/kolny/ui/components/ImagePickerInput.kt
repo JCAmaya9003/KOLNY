@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -39,7 +40,9 @@ fun ImagePickerInput(
     defaultContent: @Composable () -> Unit,
     imageSize: Dp = 100.dp,
     shape: Shape = MaterialTheme.shapes.medium,
-    showPreview: Boolean = true
+    showPreview: Boolean = true,
+    //el onImeAction solo se usa para formularios, para moverse al siguiente input
+    onImeAction: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val imageUri: Uri? = viewModel.imageFields[fieldKey]?.let { Uri.parse(it) }
@@ -47,7 +50,10 @@ fun ImagePickerInput(
     val pickLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        viewModel.onImageSelected(fieldKey, uri)
+        if (uri != null) {
+            viewModel.onImageSelected(fieldKey, uri)
+            onImeAction?.invoke()
+        }
     }
 
     val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

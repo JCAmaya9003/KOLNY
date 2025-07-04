@@ -1,11 +1,14 @@
 package com.pdm_proyecto.kolny.ui.navigation
 
 sealed class Route(val route: String) {
-    object Login: Route("login")
-    object AdminRoot: Route("admin_root")
-    object VigilanteRoot: Route("guard_root")
-    object ResidenteRoot: Route("residente_root")
 
+    /* ---------- Raíces ---------- */
+    object Login          : Route("login")
+    object AdminRoot      : Route("admin_root")
+    object VigilanteRoot  : Route("guard_root")
+    object ResidenteRoot  : Route("residente_root")
+
+    /* ---------- Admin ---------- */
     object AdminHome: Route("admin_home")
     object GestionUsers: Route("admin_gestion_usuarios")
     object AdminAddUser: Route("admin_add_user")
