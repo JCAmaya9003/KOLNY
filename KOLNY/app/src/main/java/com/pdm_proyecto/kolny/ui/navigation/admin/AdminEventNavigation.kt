@@ -1,6 +1,5 @@
 package com.pdm_proyecto.kolny.ui.navigation.admin
 
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -40,21 +39,16 @@ fun NavGraphBuilder.AdminEventNavigationEntries(
         )
     }
 
-    composable(Route.CreateEvent.route) 
-
-        val loggedUser = usuarioViewModel.loggedUser.collectAsState().value
-        if (loggedUser != null) {
-            CreateEventScreen(
-                rol = "ADMIN",
-                navController = navController,
-                viewModel = eventViewModel,
-                onEventoGuardado = {
-                    navController.popBackStack()
-                },
-                usuario = loggedUser
-            )
-        }
-
+    composable(Route.CreateEvent.route) {
+        CreateEventScreen(
+            rol = "ADMIN",
+            navController = navController,
+            viewModel = eventViewModel,
+            onEventoGuardado = {
+                navController.popBackStack()
+            },
+            usuario = adminUsuario
+        )
     }
 
     composable(Route.EventRequests.route) {
