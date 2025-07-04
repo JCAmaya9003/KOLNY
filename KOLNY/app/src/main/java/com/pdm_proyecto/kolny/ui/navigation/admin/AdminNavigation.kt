@@ -28,6 +28,7 @@ fun AdminNavigation(navController: NavHostController) {
         AdminVisitNavigationEntries(
             navController = navController,
             visitaViewModel = visitaViewModel
+
         )
     }
 }
