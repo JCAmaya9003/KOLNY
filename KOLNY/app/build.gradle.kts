@@ -13,6 +13,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     kotlin("plugin.serialization")
+    //id("com.android.application")
    // id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
     //id("com.google.dagger.hilt.android")
 }

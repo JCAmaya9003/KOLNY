@@ -19,18 +19,17 @@ class AuthRepository @Inject constructor(
 ) {
 
     /* ------------------  GOOGLE ------------------ */
-    suspend fun loginWithGoogle(credential: AuthCredential): Usuario? {
-        firebase.signInWithCredential(credential).await()
-        val correo = firebase.currentUser?.email ?: return null
-        Log.d("EMAIL", "/EMAIL FIREBASE: $correo")
-
+    suspend fun loginWithGoogle(email: String): ResultadoAcceso = runCatching {
         val row = supabase
-            .from("usuarios")                      // ← minúsculas
-            .select { filter { eq("correo", correo) }; single() }
-            .decodeSingle<UsuarioDB>()             // DTO
+            .from("usuarios")
+            .select { filter { eq("correo", email.lowercase()) }; single() }
+            .decodeAs<UsuarioDB>()                 // OBJETO, no lista
 
         val (rol, tipoAdmin) = resolverRol(row)
-        return row.toUsuario(rol, tipoAdmin)
+        mapearResultado(row.toUsuario(rol, tipoAdmin))
+    }.getOrElse {
+        Log.e("LOGIN", "Supabase error Google", it)
+        ResultadoAcceso.NoRegistrado
     }
 
     /* ------------------  EMAIL + PASS ------------------ */

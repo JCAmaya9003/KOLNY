@@ -12,8 +12,8 @@ sealed class Route(val route: String) {
     object AdminHome      : Route("admin_home")
     object GestionUsers   : Route("admin_gestion_usuarios")
     object Reportes       : Route("admin_reportes")
-    object AdminAdd     : Route("admin_add")
-    object AdminEdit    : Route("admin_edit")
+    object AdminAddUser     : Route("admin_add_user")
+    object AdminEditUser    : Route("admin_edit_user")
 
     /* ---------- Vigilante ---------- */
     /*object VigilanteHome      : Route("vigilante_home")

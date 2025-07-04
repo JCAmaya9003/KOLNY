@@ -1,5 +1,6 @@
 package com.pdm_proyecto.kolny.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,10 +16,13 @@ import com.pdm_proyecto.kolny.data.models.ResultadoAcceso
 import com.pdm_proyecto.kolny.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.tasks.await
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepo: AuthRepository
+    private val authRepo: AuthRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     /*var email by mutableStateOf("")
@@ -27,8 +31,18 @@ class LoginViewModel @Inject constructor(
     private val _estadoAcceso = MutableStateFlow<ResultadoAcceso>(ResultadoAcceso.Desconocido)
     val estadoAcceso: StateFlow<ResultadoAcceso> = _estadoAcceso
 
-    fun loginConCredencialGoogle(credential: AuthCredential) = viewModelScope.launch {
-        _estadoAcceso.value = mapearRol(authRepo.loginWithGoogle(credential))
+    fun loginConCredencialGoogle(cred: AuthCredential) = viewModelScope.launch {
+        try {
+            firebaseAuth.signInWithCredential(cred).await()
+            val email = firebaseAuth.currentUser?.email
+            Log.d("LOGIN", "Firebase email = $email")   // ← debería imprimirse
+            _estadoAcceso.value = if (email != null)
+                authRepo.loginWithGoogle(email)
+            else ResultadoAcceso.Desconocido
+        } catch (e: Exception) {
+            Log.e("LOGIN", "signInWithCredential error", e)
+            _estadoAcceso.value = ResultadoAcceso.Desconocido
+        }
     }
 
     fun loginConEmail(correo: String, pass: String) = viewModelScope.launch {

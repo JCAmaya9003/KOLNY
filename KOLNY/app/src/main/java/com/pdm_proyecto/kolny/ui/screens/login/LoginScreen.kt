@@ -2,6 +2,8 @@ package com.pdm_proyecto.kolny.ui.screens.login
 
 import android.app.Activity
 import android.os.Build
+import android.util.Log
+import android.util.Log.e
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -32,6 +34,8 @@ import com.pdm_proyecto.kolny.viewmodels.LoginViewModel
 import kotlin.jvm.java
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.pdm_proyecto.kolny.BuildConfig
+import com.pdm_proyecto.kolny.ui.components.google.BotonGoogleLogin
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -42,13 +46,13 @@ fun LoginScreen(
 
 ) {
 
-    val context = LocalContext.current
+    //val context = LocalContext.current
     val loginViewModel: LoginViewModel = hiltViewModel()
     var emailField     by remember { mutableStateOf("") }
     var passwordField  by remember { mutableStateOf("") }
 
     /* ---------- Google Sign-In launcher ---------- */
-    val googleSignInClient = remember {
+    /*val googleSignInClient = remember {
         GoogleSignIn.getClient(
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -61,18 +65,20 @@ fun LoginScreen(
     //var correoAutenticado by remember { mutableStateOf<String?>(null) }
 
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        //if (result.resultCode == Activity.RESULT_OK) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
             try {
-                val account = task.getResult(ApiException::class.java)
+                //val account = task.getResult(ApiException::class.java)
+                val account = task.result
+                Log.d("LOGIN", "EMAIL SELECTED = ${account.email}")
                 val credential =
-                    GoogleAuthProvider.getCredential(account.idToken /* idToken */, null)
+                    GoogleAuthProvider.getCredential(account.idToken, null)
                 loginViewModel.loginConCredencialGoogle(credential)
-            } catch (_: Exception) { /* puedes mostrar un snackbar */ }
-        }
-    }
+            } catch (e: Exception) {  Log.e("LOGIN", "Google sign-in failed", e) }
+       // }
+    }*/
 
     val estadoAcceso by loginViewModel.estadoAcceso.collectAsState()
 
@@ -208,10 +214,9 @@ fun LoginScreen(
                 Text("  O inicia sesión con  ", color = Color.Black, fontSize = 12.sp)
                 Divider(Modifier.weight(1f), color = Color.Black)
             }
-            Button(
+            /*Button(
                 onClick = {
-                    val intent = googleSignInClient.signInIntent
-                    launcher.launch(intent)
+                    launcher.launch(googleSignInClient.signInIntent)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -227,6 +232,10 @@ fun LoginScreen(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("Iniciar sesión con Google", color = Color.Black)
+            }*/
+            BotonGoogleLogin { cred ->
+                // ➊ Enviamos la credencial al ViewModel
+                loginViewModel.loginConCredencialGoogle(cred)
             }
 
             Text(

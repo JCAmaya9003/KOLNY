@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.pdm_proyecto.kolny.data.models.ResultadoAcceso
+import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
 import com.pdm_proyecto.kolny.ui.screens.login.LoginScreen
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 
@@ -64,8 +65,8 @@ fun RootNavGraph(navController: NavHostController) {
         }
 
         /* ----------- SUB-GRÁFICOS ----------- */
-        //AdminNavigation(navController,usuarioViewModel)
-        adminGraph(navController,usuarioViewModel)
+        AdminNavigation(navController,usuarioViewModel)
+
         /*vigilanteGraph(navController)
         residenteGraph(navController)*/
     }
