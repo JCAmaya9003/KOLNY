@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.pdm_proyecto.kolny.ui.components.CardInfo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +59,6 @@ fun AdminUserScreen(
     onAddUser: () -> Unit = {},
     onEditUser: (Usuario) -> Unit = {}
 ) {
-
     val usuarios by viewModel.usuarios.collectAsState()
 
     Scaffold (
@@ -145,17 +145,17 @@ fun UserCard(
                     .padding(horizontal = 12.dp)
                     .fillMaxWidth()
             ) {
-                UserInfo(label = "Nombre:", value = usuario.nombre)
+                CardInfo(label = "Nombre:", value = usuario.nombre)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    UserInfo(
+                    CardInfo(
                         label = "DUI:",
                         value = usuario.dui,
                         modifier = Modifier.weight(1f)
                     )
-                    UserInfo(
+                    CardInfo(
                         label = "Número de casa:",
                         value = usuario.casa,
                         modifier = Modifier.weight(1.4f)
@@ -165,18 +165,18 @@ fun UserCard(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    UserInfo(
+                    CardInfo(
                         label = "Teléfono:",
                         value = usuario.telefono,
                         modifier = Modifier.weight(1f)
                     )
-                    UserInfo(
+                    CardInfo(
                         label = "Fecha de nacimiento:",
                         value = formatDate(usuario.fechaNacimiento),
                         modifier = Modifier.weight(1.4f)
                     )
                 }
-                UserInfo(label = "Correo Electrónico:", value = usuario.email)
+                CardInfo(label = "Correo Electrónico:", value = usuario.email)
             }
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -196,20 +196,4 @@ fun UserCard(
             }
         }
     }
-}
-
-@Composable
-fun UserInfo(label: String, value: String, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .padding(4.dp)
-    ) {
-        Text(
-            text = label,
-            fontStyle = FontStyle.Italic,
-            color = Color.Gray,
-        )
-        Text( text = value )
-    }
-    Spacer(modifier = Modifier.height(4.dp))
 }

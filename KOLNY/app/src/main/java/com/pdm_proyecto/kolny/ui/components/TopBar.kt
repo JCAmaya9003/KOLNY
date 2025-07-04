@@ -90,13 +90,15 @@ fun KolnyTopBar(
             ) {
                 if(rol === "ADMIN") {
                     IconButton(onClick = {
-                        navController.navigate("adminUserScreen")
+                        navController.navigate("adminScreen")
                     }) {
                         Icon(Icons.Default.Person, contentDescription = "Perfiles")
                     }
                 }
                 if(rol === "VIGILANTE"){
-                    IconButton(onClick = { /*dirigir a pantalla de visitas*/ } ) {
+                    IconButton(onClick = {
+                        navController.navigate("visitScreen")
+                    } ) {
                         Icon(Icons.Default.Face, contentDescription = "Visitas")
                     }
                 }
@@ -107,23 +109,6 @@ fun KolnyTopBar(
                     Icon(Icons.Default.DateRange, contentDescription = "Eventos")
                 }
             }
-        }
-    }
-}
-
-@Preview
-@ExperimentalMaterial3Api
-@Composable
-fun TopBarPreview() {
-    Scaffold(
-        topBar = { KolnyTopBar(rol = "VIGILANTE", navController = NavHostController(LocalContext.current)) }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            Text("si funciona")
         }
     }
 }

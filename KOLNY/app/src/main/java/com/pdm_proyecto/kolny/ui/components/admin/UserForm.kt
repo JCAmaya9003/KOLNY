@@ -1,32 +1,58 @@
 package com.pdm_proyecto.kolny.ui.components.admin
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.ui.components.DatePickerInput
 import com.pdm_proyecto.kolny.ui.components.FormInput
 import com.pdm_proyecto.kolny.ui.components.ImagePickerInput
-
 import com.pdm_proyecto.kolny.viewmodels.FormViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
+import kotlinx.coroutines.launch
+import kotlin.text.isNotBlank
 
 @Composable
 fun UserForm(
@@ -43,40 +69,60 @@ fun UserForm(
     LaunchedEffect(initialData) {
         initialData?.let { usuario ->
             formViewModel.setInitialImageUri("fotoPerfil", usuario.fotoPerfil)
-            formViewModel.setInitialTextValue("nombre", usuario.nombre)
+            formViewModel.setInitialTextValue("nombre", TextFieldValue(usuario.nombre))
             formViewModel.setInitialFormattedValue("telefono", TextFieldValue(usuario.telefono))
             formViewModel.setInitialDateValue("fechaNacimiento", usuario.fechaNacimiento)
-            formViewModel.setInitialTextValue("correo", usuario.email)
+            formViewModel.setInitialTextValue("correo", TextFieldValue(usuario.email))
             formViewModel.setInitialFormattedValue("dui", TextFieldValue(usuario.dui))
-            formViewModel.setInitialTextValue("password", "")
-            formViewModel.setInitialTextValue("casa", usuario.casa)
+            formViewModel.setInitialTextValue("password", TextFieldValue())
+            formViewModel.setInitialTextValue("casa", TextFieldValue(usuario.casa))
         }
     }
 
+    val nombreFocusRequester = remember { FocusRequester() }
+    val datePickerFocusRequester = remember { FocusRequester() }
 
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding())
+            .fillMaxSize(),
+    ) {
         item {
-            ImagePickerInput(
-                fieldKey = "fotoPerfil",
-                viewModel = formViewModel,
-                defaultContent = {
-                    Icon(
-                        Icons.Default.Person,
-                        contentDescription = "Ícono de perfil",
-                        modifier = Modifier
-                            .size(40.dp)
-                    )
-                },
-                shape = CircleShape,
-                showPreview = true
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .padding(top = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                ImagePickerInput(
+                    fieldKey = "fotoPerfil",
+                    viewModel = formViewModel,
+                    defaultContent = {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = "Ícono de perfil",
+                            modifier = Modifier
+                                .size(40.dp)
+                        )
+                    },
+                    shape = CircleShape,
+                    showPreview = true,
+                    onImeAction = {
+                        nombreFocusRequester.requestFocus()
+                    }
+                )
+            }
         }
         item {
             FormInput(
                 fieldKey = "nombre",
                 label = "Nombre del residente:",
                 placeHolder = "ej. Jacobo Perez",
-                viewModel = formViewModel
+                viewModel = formViewModel,
+                inputCapitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next,
+                modifier = Modifier.focusRequester(nombreFocusRequester)
             )
         }
         item {
@@ -86,7 +132,11 @@ fun UserForm(
                 placeHolder = "+503335432301",
                 viewModel = formViewModel,
                 inputType = KeyboardType.Number,
-                isFormatted = true
+                isFormatted = true,
+                imeAction = ImeAction.Next,
+                onImeAction = {
+                    datePickerFocusRequester.requestFocus()
+                }
             )
         }
         item {
@@ -94,7 +144,9 @@ fun UserForm(
                 fieldKey = "fechaNacimiento",
                 label = "Fecha de Nacimiento:",
                 placeHolder = "dd/mm/YYYY",
-                viewModel = formViewModel
+                viewModel = formViewModel,
+                modifier = Modifier.focusRequester(datePickerFocusRequester),
+                imeAction = ImeAction.Next
             )
         }
         item {
@@ -103,7 +155,8 @@ fun UserForm(
                 label = "Correo Electronico:",
                 placeHolder = "example@gmail.com",
                 viewModel = formViewModel,
-                inputType = KeyboardType.Email
+                inputType = KeyboardType.Email,
+                imeAction = ImeAction.Next
             )
         }
         item {
@@ -113,17 +166,19 @@ fun UserForm(
                 placeHolder = "12345678-9",
                 viewModel = formViewModel,
                 inputType = KeyboardType.Number,
-                isFormatted = true
+                isFormatted = true,
+                imeAction = ImeAction.Next
             )
         }
         item {
             FormInput(
-                    fieldKey = "password",
-                    label = if (isEditMode) "Crear nueva contraseña:" else "Contraseña:",
-                    placeHolder = if (isEditMode) "(dejar en blanco si no es necesario)" else "root1234",
-                    viewModel = formViewModel,
-                    inputType = KeyboardType.Password,
-                    isPassword = true
+                fieldKey = "password",
+                label = if (isEditMode) "Crear nueva contraseña:" else "Contraseña:",
+                placeHolder = if (isEditMode) "(dejar en blanco si no es necesario)" else "root1234",
+                viewModel = formViewModel,
+                inputType = KeyboardType.Password,
+                isPassword = true,
+                imeAction = ImeAction.Next
             )
         }
         item {
@@ -131,50 +186,77 @@ fun UserForm(
                 fieldKey = "casa",
                 label = "Numero de casa:",
                 placeHolder = "ej. 46D",
-                viewModel = formViewModel
+                viewModel = formViewModel,
+                imeAction = ImeAction.Done,
+                onImeAction = {
+                    sendUserForm(
+                        formViewModel = formViewModel,
+                        usuarioViewModel = usuarioViewModel,
+                        initialData = initialData,
+                        isEditMode = isEditMode,
+                        onSubmitSuccess = onSubmitSuccess
+                    )
+                }
             )
         }
         item {
             Button(onClick = {
-                val requiredFields = mutableListOf("nombre", "telefono", "fechaNacimiento", "correo", "dui", "casa")
-
-                var optionalFields = emptyList<String>()
-
-                if (isEditMode) {
-                    optionalFields = listOf("password")
-                } else {
-                    requiredFields += "password"
-                }
-
-                val isValid = formViewModel.validate(fields = requiredFields + optionalFields, optionalFields = optionalFields)
-
-                if (isValid) {
-                    val usuario = Usuario(
-                        fotoPerfil = formViewModel.imageFields["fotoPerfil"],
-                        dui = formViewModel.formattedTextFields["dui"]?.text ?: return@Button,
-                        nombre = formViewModel.textFields["nombre"] ?: return@Button,
-                        telefono = formViewModel.formattedTextFields["telefono"]?.text ?: return@Button,
-                        fechaNacimiento = formViewModel.dateFields["fechaNacimiento"] ?: return@Button,
-                        email = formViewModel.textFields["correo"] ?: return@Button,
-                        casa = formViewModel.textFields["casa"] ?: return@Button,
-                        password = formViewModel.textFields["password"]
-                            ?.takeIf { it.isNotBlank() }
-                            ?: initialData?.password
-                            ?: return@Button
-                    )
-
-                    if (isEditMode) {
-                        usuarioViewModel.editUsuario(usuario)
-                    } else {
-                        usuarioViewModel.addUsuario(usuario)
-                    }
-
-                    formViewModel.clearAllFields()
-                    onSubmitSuccess()
-                }
+                sendUserForm(
+                    formViewModel = formViewModel,
+                    usuarioViewModel = usuarioViewModel,
+                    initialData = initialData,
+                    isEditMode = isEditMode,
+                    onSubmitSuccess = onSubmitSuccess
+                )
             }) {
                 Text(if (isEditMode) "Actualizar Usuario" else "Guardar Usuario")
             }
         }
+    }
+}
+
+fun sendUserForm(
+    formViewModel: FormViewModel,
+    usuarioViewModel: UsuarioViewModel,
+    initialData: Usuario? = null,
+    isEditMode: Boolean,
+    onSubmitSuccess: () -> Unit
+) {
+    val requiredFields = mutableListOf("nombre", "telefono", "fechaNacimiento", "correo", "dui", "casa")
+
+    var optionalFields = emptyList<String>()
+
+    if (isEditMode) {
+        optionalFields = listOf("password")
+    } else {
+        requiredFields += "password"
+    }
+
+    formViewModel.markTriedToSubmit()
+    val isValid = formViewModel.validate(fields = requiredFields + optionalFields, optionalFields = optionalFields)
+
+    if (isValid) {
+        val usuario = Usuario(
+            fotoPerfil = formViewModel.imageFields["fotoPerfil"],
+            dui = formViewModel.formattedTextFields["dui"]?.text ?: return,
+            nombre = formViewModel.textFields["nombre"]?.text ?: return,
+            telefono = formViewModel.formattedTextFields["telefono"]?.text ?: return,
+            fechaNacimiento = formViewModel.dateFields["fechaNacimiento"] ?: return,
+            email = formViewModel.textFields["correo"]?.text ?: return,
+            casa = formViewModel.textFields["casa"]?.text ?: return,
+            password = formViewModel.textFields["password"]?.text
+                ?.takeIf { it.isNotBlank() }
+                ?: initialData?.password
+                ?: return
+        )
+
+        if (isEditMode) {
+            usuarioViewModel.editUsuario(usuario)
+        } else {
+            usuarioViewModel.addUsuario(usuario)
+        }
+
+        formViewModel.clearAllFields()
+        onSubmitSuccess()
     }
 }

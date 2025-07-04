@@ -1,4 +1,4 @@
-package com.pdm_proyecto.kolny.ui.screens.admin
+package com.pdm_proyecto.kolny.ui.screens.visit
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
@@ -11,22 +11,23 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.pdm_proyecto.kolny.data.models.Usuario
-import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
+import com.pdm_proyecto.kolny.data.models.Visita
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
-import com.pdm_proyecto.kolny.ui.components.admin.UserForm
+import com.pdm_proyecto.kolny.ui.components.visit.VisitForm
+import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
 @Composable
-fun AdminEditUserScreen(
-    viewModel: UsuarioViewModel,
+fun EditVisitScreen(
+    rol: String,
+    viewModel: VisitaViewModel,
     navController: NavHostController,
-    usuario: Usuario,
+    visita: Visita,
     onDone: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
 
     Scaffold(
-        topBar = { KolnyTopBar(rol = "ADMIN", navController = navController) },
+        topBar = { KolnyTopBar(rol = rol, navController = navController) },
         modifier = Modifier
             .fillMaxSize()
             .pointerInput(Unit) {
@@ -39,13 +40,12 @@ fun AdminEditUserScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize(),
-        ) {
-            UserForm(
-                usuarioViewModel = viewModel,
-                initialData = usuario,
+        ){
+            VisitForm(
+                visitaViewModel = viewModel,
+                initialData = visita,
                 onSubmitSuccess = { onDone() }
             )
         }
     }
 }
-
