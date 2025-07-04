@@ -17,6 +17,7 @@ import com.pdm_proyecto.kolny.data.models.Evento
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
@@ -119,9 +120,11 @@ fun CreateEventScreen(
                 Text(if (horaFin.isNotEmpty()) horaFin else "No seleccionada")
             }
 
+            val coroutineScope = rememberCoroutineScope()
+
             Button(
                 onClick = {
-                    // Valida campos vacíos
+                    // Validaciones básicas
                     if (titulo.isBlank() || descripcion.isBlank() || lugar.isBlank()
                         || fecha.isBlank() || horaInicio.isBlank() || horaFin.isBlank()
                     ) {
@@ -130,44 +133,44 @@ fun CreateEventScreen(
                         return@Button
                     }
 
-                    // Valida orden de horas
                     if (horaInicio >= horaFin) {
                         mensajeError = "La hora de inicio debe ser antes que la hora de fin."
                         mostrarDialogoError = true
                         return@Button
                     }
 
-                    // Valida traslape
-                    if (viewModel.existeTraslapeDeEvento(fecha, horaInicio, horaFin)) {
-                        mensajeError = "Ya existe un evento en ese horario. Selecciona otra hora o fecha."
-                        mostrarDialogoError = true
-                        return@Button
-                    }
-
-                    // Crear evento
                     val evento = Evento(
+                        id = eventoSeleccionado?.id ?: 0,
                         titulo = titulo,
                         descripcion = descripcion,
                         lugar = lugar,
                         fecha = fecha,
                         horaInicio = horaInicio,
                         horaFin = horaFin,
-                        creadoPor = usuario.nombre,
+                        creadoPor = usuario.dui,
                         aprobado = rol == "ADMIN"
                     )
 
-                    if (rol == "ADMIN") {
-                        if (eventoSeleccionado != null) {
-                            viewModel.actualizarEvento(evento.copy(id = eventoSeleccionado!!.id))
-                        } else {
-                            viewModel.agregarEvento(evento)
+                    coroutineScope.launch {
+                        viewModel.existeTraslapeDeEvento(fecha, horaInicio, horaFin) { hayTraslape ->
+                            if (hayTraslape) {
+                                mensajeError = "Ya existe un evento en ese horario. Selecciona otra hora o fecha."
+                                mostrarDialogoError = true
+                            } else {
+                                if (rol == "ADMIN") {
+                                    if (eventoSeleccionado != null) {
+                                        viewModel.actualizarEvento(evento)
+                                    } else {
+                                        viewModel.enviarSolicitud(evento) // ✅ ahora sí se guarda nuevo evento
+                                    }
+                                } else {
+                                    viewModel.enviarSolicitud(evento)
+                                }
+                                viewModel.limpiarEventoSeleccionado()
+                                onEventoGuardado()
+                            }
                         }
-                    } else {
-                        viewModel.enviarSolicitud(evento)
                     }
-
-                    viewModel.limpiarEventoSeleccionado()
-                    onEventoGuardado()
                 },
                 modifier = Modifier.align(Alignment.End)
             ) {

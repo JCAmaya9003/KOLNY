@@ -18,9 +18,6 @@ class EventViewModel @Inject constructor(
     private val _eventos = MutableStateFlow<List<Evento>>(emptyList())
     val eventos: StateFlow<List<Evento>> = _eventos
 
-    private val _solicitudes = MutableStateFlow<List<Evento>>(emptyList())
-    val solicitudes: StateFlow<List<Evento>> = _solicitudes
-
     private val _eventoSeleccionado = MutableStateFlow<Evento?>(null)
     val eventoSeleccionado: StateFlow<Evento?> = _eventoSeleccionado
 
@@ -30,50 +27,42 @@ class EventViewModel @Inject constructor(
 
     fun loadEventos() {
         viewModelScope.launch {
-            _eventos.value = repository.getEventos().toList()
-            _solicitudes.value = repository.getSolicitudes().toList()
-        }
-    }
-
-    fun agregarEvento(evento: Evento) {
-        viewModelScope.launch {
-            _eventos.value = repository.agregarEvento(evento).toList()
+            _eventos.value = repository.getEventos()
         }
     }
 
     fun enviarSolicitud(evento: Evento) {
         viewModelScope.launch {
-            _solicitudes.value = repository.enviarSolicitud(evento).toList()
-        }
-    }
-
-    fun aprobarSolicitud(evento: Evento) {
-        viewModelScope.launch {
-            _solicitudes.value = repository.eliminarSolicitud(evento.id).toList()
-            _eventos.value = repository.aprobarSolicitud(evento).toList()
+            val success = repository.enviarSolicitud(evento)
+            if (success) {
+                loadEventos()
+            }
         }
     }
 
     fun eliminarEvento(id: Int) {
         viewModelScope.launch {
-            _eventos.value = repository.eliminarEvento(id).toList()
+            val success = repository.eliminarEvento(id)
+            if (success) {
+                loadEventos()
+            }
         }
     }
 
     fun actualizarEvento(evento: Evento) {
         viewModelScope.launch {
-            _eventos.value = repository.actualizarEvento(evento).toList()
+            val success = repository.actualizarEvento(evento)
+            if (success) {
+                loadEventos()
+            }
         }
     }
 
-    fun eliminarSolicitud(id: Int) {
+    fun obtenerEventosPorFecha(fecha: String, onResult: (List<Evento>) -> Unit) {
         viewModelScope.launch {
-            _solicitudes.value = repository.eliminarSolicitud(id).toList()
+            val eventosPorFecha = repository.obtenerEventosPorFecha(fecha)
+            onResult(eventosPorFecha)
         }
-    }
-
-    fun obtenerEventosPorFecha(fecha: String): List<Evento> {
-        return repository.obtenerEventosPorFecha(fecha)
     }
 
     fun seleccionarEvento(evento: Evento) {
@@ -84,8 +73,11 @@ class EventViewModel @Inject constructor(
         _eventoSeleccionado.value = null
     }
 
-    fun existeTraslapeDeEvento(fecha: String, horaInicio: String, horaFin: String): Boolean {
-        val idIgnorado = _eventoSeleccionado.value?.id
-        return repository.existeTraslape(fecha, horaInicio, horaFin, idIgnorado)
+    fun existeTraslapeDeEvento(fecha: String, horaInicio: String, horaFin: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            val traslape = repository.existeTraslape(fecha, horaInicio, horaFin)
+            onResult(traslape)
+        }
     }
 }
+

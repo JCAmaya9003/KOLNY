@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
@@ -31,17 +30,20 @@ fun EventScreen(
     onNavigateToCreate: () -> Unit
 ) {
     val eventos by viewModel.eventos.collectAsState()
-    val solicitudes by viewModel.solicitudes.collectAsState()
 
     var fechaSeleccionada by remember { mutableStateOf("") }
-    val eventosFiltrados = if (fechaSeleccionada.isNotEmpty()) {
-        viewModel.obtenerEventosPorFecha(fechaSeleccionada)
-    }
-    else {
-        eventos
-    }
+    var eventosFiltrados by remember { mutableStateOf<List<Evento>>(emptyList()) }
+    val todosLosEventos by viewModel.eventos.collectAsState()
 
-    val solicitudesPendientesCount = solicitudes.size
+    LaunchedEffect(fechaSeleccionada, todosLosEventos) {
+        if (fechaSeleccionada.isNotEmpty()) {
+            viewModel.obtenerEventosPorFecha(fechaSeleccionada) {
+                eventosFiltrados = it
+            }
+        } else {
+            eventosFiltrados = todosLosEventos
+        }
+    }
 
     val contexto = LocalContext.current
     val calendario = Calendar.getInstance()
@@ -64,9 +66,7 @@ fun EventScreen(
             KolnyTopBar(rol = rol, navController = navController)
         },
         floatingActionButton = {
-            if (rol == "VIGILANTE") {
-                Spacer(modifier = Modifier.width(0.dp))
-            } else {
+            if (rol != "VIGILANTE") {
                 FloatingActionButton(onClick = onNavigateToCreate) {
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Agregar evento")
                 }
@@ -77,73 +77,48 @@ fun EventScreen(
             modifier = Modifier
                 .padding(padding)
                 .padding(16.dp)
+                .fillMaxSize()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ){
-                        Button(onClick = { datePicker.show() }) {
-                            Text("Seleccionar fecha")
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { fechaSeleccionada = "" }) {
-                            Text("Todas las fechas")
-                        }
+                Column {
+                    Button(onClick = { datePicker.show() }) {
+                        Text("Seleccionar fecha")
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = if (fechaSeleccionada.isNotEmpty()) fechaSeleccionada else "Todas las fechas")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Button(onClick = { fechaSeleccionada = "" }) {
+                        Text("Todas las fechas")
+                    }
                 }
 
-                if (rol == "ADMIN") {
-                    Box {
-                        IconButton(onClick = {
-                            navController.navigate(Route.EventRequests.route)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.MailOutline,
-                                contentDescription = "Solicitudes"
-                            )
-                        }
+                Spacer(modifier = Modifier.width(8.dp))
 
-                        if (solicitudesPendientesCount > 0) {
-                            Box(
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(top = 4.dp, end = 4.dp)
-                                    .size(16.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Surface(
-                                    shape = MaterialTheme.shapes.small,
-                                    color = MaterialTheme.colorScheme.error,
-                                    shadowElevation = 4.dp
-                                ) {
-                                    Text(
-                                        text = solicitudesPendientesCount.toString(),
-                                        color = MaterialTheme.colorScheme.onError,
-                                        style = MaterialTheme.typography.labelSmall,
-                                        modifier = Modifier.padding(horizontal = 4.dp)
-                                    )
-                                }
-                            }
-                        }
+                Text(text = if (fechaSeleccionada.isNotEmpty()) fechaSeleccionada else "Todas las fechas")
+
+                if (rol == "ADMIN") {
+                    IconButton(onClick = {
+                        navController.navigate(Route.EventRequests.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.MailOutline,
+                            contentDescription = "Solicitudes"
+                        )
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 items(eventosFiltrados) { evento ->
                     Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
@@ -180,7 +155,6 @@ fun EventScreen(
             }
         }
     }
-
 
     if (mostrarDialogo && eventoAEliminar != null) {
         AlertDialog(

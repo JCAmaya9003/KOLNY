@@ -15,6 +15,17 @@ fun NavGraphBuilder.AdminEventNavigationEntries(
     navController: NavHostController,
     eventViewModel: EventViewModel
 ) {
+    val adminUsuario = Usuario(
+        dui = "12345678-9",
+        nombre = "ADMIN",
+        telefono = "1234-5678",
+        fechaNacimiento = Date(),
+        casa = "Casa Admin",
+        email = "admin@admin.admin",
+        password = "root123",
+        rol = "ADMIN"
+    )
+
     composable(Route.Eventos.route) {
         EventScreen(
             rol = "ADMIN",
@@ -34,22 +45,15 @@ fun NavGraphBuilder.AdminEventNavigationEntries(
             onEventoGuardado = {
                 navController.popBackStack()
             },
-            usuario = Usuario(
-                dui = "12345678-9",
-                nombre = "ADMIN",
-                telefono = "1234-5678",
-                fechaNacimiento = Date(),
-                casa = "Casa Admin",
-                email = "admin@admin.admin",
-                password = "root123",
-                rol = "ADMIN"
-            )
+            usuario = adminUsuario
         )
     }
 
     composable(Route.EventRequests.route) {
         SolicitudesEventosScreen(
             navController = navController,
-            viewModel = eventViewModel)
+            viewModel = eventViewModel,
+            usuarioAdmin = adminUsuario.nombre // 👈 nuevo parámetro
+        )
     }
 }

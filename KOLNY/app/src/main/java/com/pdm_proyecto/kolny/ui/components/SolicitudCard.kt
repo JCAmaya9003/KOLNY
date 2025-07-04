@@ -65,9 +65,10 @@ fun SolicitudCard(
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
             Text("📅 ${evento.titulo}", style = MaterialTheme.typography.titleMedium)
-            Text("📍 ${evento.lugar}")
-            Text("🕒 ${evento.fecha} — ${evento.horaInicio}")
-            Text("👤 ${evento.creadoPor}")
+            Text("📍 Lugar: ${evento.lugar}")
+            Text("🗓 Fecha: ${evento.fecha}")
+            Text("🕒 Hora: ${evento.horaInicio} - ${evento.horaFin}")
+            Text("👤 Creado por: ${evento.creadoPor}")
 
             Row(
                 modifier = Modifier
