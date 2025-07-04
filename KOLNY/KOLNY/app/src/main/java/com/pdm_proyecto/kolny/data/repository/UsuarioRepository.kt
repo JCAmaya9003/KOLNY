@@ -4,6 +4,7 @@
 package com.pdm_proyecto.kolny.data.repository
 
 import android.util.Log
+import com.pdm_proyecto.kolny.data.models.AdministradorDb
 import com.pdm_proyecto.kolny.data.models.ResidenteDB
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.data.models.UsuarioDB
@@ -43,6 +44,23 @@ class UsuarioRepository @Inject constructor(
 
     /* ---------- CRUD ---------- */
 
+
+    /*suspend fun getAll(): List<Usuario> = withContext(Dispatchers.IO) {
+        supabase.from("usuarios")
+            .select(columns("*, residente(numerocasa)")) // relación opcional con residente
+            .filter { eq("activo", true) }
+            .decodeList<UsuarioDB>()
+            .map { it.toUsuario() }
+    }*/
+    /*suspend fun getAll(): List<Usuario> = withContext(Dispatchers.IO) {
+        supabase.from("usuarios")
+            .select {
+                filter { eq("activo", true) }
+            }
+            .decodeList<UsuarioDB>()
+            .map { it.toDomain() }//cambiarlo, para que guarden Usuarios y salga la casa
+    }*/
+
     suspend fun getAll(): List<Usuario> = withContext(Dispatchers.IO) {
         supabase.from("usuarios")
             .select {
@@ -59,16 +77,6 @@ class UsuarioRepository @Inject constructor(
 
                 usuario.copy(casa = numeroCasa ?: "")
             }
-    }
-
-    suspend fun getUsuarioByEmail(email: String): Usuario? = withContext(Dispatchers.IO) {
-        supabase.from("usuarios")
-            .select {
-                filter { eq("correo", email) }
-            }
-            .decodeList<UsuarioDB>()
-            .map { it.toDomain() }
-            .firstOrNull()
     }
 
     suspend fun add(/*u: UsuarioDB*/ u: Usuario): List<Usuario> = withContext(Dispatchers.IO) {
@@ -95,10 +103,10 @@ class UsuarioRepository @Inject constructor(
 
     suspend fun update(/*u: UsuarioDB*/ u: Usuario): List<Usuario> = withContext(Dispatchers.IO) {
         val usuarioDB = u.toUsuarioDB()
-        Log.d("usuario", "usuario + $usuarioDB")
+        Log.d("EDITAR", "USUARIO DB: $usuarioDB")
         supabase.from("usuarios")
-            .update(usuarioDB) { filter { eq("dui", usuarioDB.dui) } }
-        Log.d("a", "si paso el update")
+            .update(u) { filter { eq("dui", usuarioDB.dui) } }
+
         if(u.rol == "RESIDENTE"){
             supabase.from("residentes")
                 .update(
@@ -120,14 +128,22 @@ class UsuarioRepository @Inject constructor(
             }
         getAll()
     }
+
+    /* suspend fun resolverRol(row: UsuarioDB): Pair<String, String?> = when (row.idrol) {
+        1 -> "Residente"   to obtenerCasa(row.dui)
+        2 -> "Vigilante"   to null
+        3 -> "Administrador" to null
+        else -> "Desconocido" to null
+    }*/
     private suspend fun obtenerCasa(dui: String): String? = runCatching {
         supabase
             .from("residentes")
             .select {
                 filter { eq("residentedui", dui) }
-                single()
+                single()                              // ← devuelve objeto JSON
             }
-            .decodeAs<ResidenteDB>()
-            .numerocasa
-    }.getOrNull()
+            .decodeAs<ResidenteDB>()              // ← ahora sí encuentra serializer
+            .numeroCasa
+    }.getOrNull()                                     // null si no hay fila o error
+
 }

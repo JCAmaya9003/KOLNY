@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 import java.util.Date
 
 @Serializable
-
 data class Usuario(
     val fotoPerfil: String? = null,
     val dui: String,

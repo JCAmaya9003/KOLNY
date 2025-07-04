@@ -155,10 +155,10 @@ fun UserCard(
                         value = usuario.dui,
                         modifier = Modifier.weight(1f)
                     )
-                    if(usuario.rol == "RESIDENTE") {
+                    if(usuario.casa != null) {
                         CardInfo(
                             label = "Número de casa:",
-                            value = usuario.casa ?: "",
+                            value = usuario.casa,
                             modifier = Modifier.weight(1.4f)
                         )
                     }

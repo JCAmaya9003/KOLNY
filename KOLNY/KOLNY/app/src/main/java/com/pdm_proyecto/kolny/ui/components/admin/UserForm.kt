@@ -84,7 +84,6 @@ fun UserForm(
             formViewModel.setInitialFormattedValue("dui", TextFieldValue(usuario.dui))
             formViewModel.setInitialTextValue("password", TextFieldValue())
             usuario.casa?.let { formViewModel.setInitialTextValue("casa", TextFieldValue(it)) }
-            selectedRol = usuario.rol
         }
     }
 
@@ -228,12 +227,17 @@ fun UserForm(
                 imeAction = ImeAction.Next
             )
         }
+        val showCasaField = if (isEditMode) {
+            initialData?.rol == "RESIDENTE"
+        } else {
+            selectedRol == "RESIDENTE"
+        }
 
-        if (selectedRol == "RESIDENTE") {
+        if (showCasaField) {
             item {
                 FormInput(
                     fieldKey = "casa",
-                    label = "Número de casa:",
+                    label = "Número de casa:", //la casa sigue diciendo que es obligatoria en edit
                     placeHolder = "ej. 46D",
                     viewModel = formViewModel,
                     imeAction = ImeAction.Done,
@@ -308,9 +312,10 @@ fun sendUserForm(
             telefono = formViewModel.formattedTextFields["telefono"]?.text ?: return,
             fechaNacimiento = formViewModel.dateFields["fechaNacimiento"] ?: return,
             email = formViewModel.textFields["correo"]?.text ?: return,
-            casa = if (selectedRol == "RESIDENTE") {
-                formViewModel.textFields["casa"]?.text ?: return
-            }else null,
+            casa = when {
+                selectedRol == "RESIDENTE" -> formViewModel.textFields["casa"]?.text ?: return
+                else -> null
+            },
             password = formViewModel.textFields["password"]?.text
                 ?.takeIf { it.isNotBlank() }
                 ?: initialData?.password

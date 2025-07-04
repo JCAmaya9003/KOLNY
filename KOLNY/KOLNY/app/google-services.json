@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "308716260519",
+    "project_id": "kolny-ecb49",
+    "storage_bucket": "kolny-ecb49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:308716260519:android:181d8be3e3b1a4f3145f82",
+        "android_client_info": {
+          "package_name": "com.pdm_proyecto.kolny"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "308716260519-vf9tcb6dhnanav05kmmss8h8gpuv2q2q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaspSh0Nve9S5MFfmbv_NB4EJoEZN1pRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "308716260519-vf9tcb6dhnanav05kmmss8h8gpuv2q2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
