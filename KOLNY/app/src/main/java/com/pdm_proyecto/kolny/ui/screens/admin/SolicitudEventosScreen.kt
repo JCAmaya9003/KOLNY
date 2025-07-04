@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.data.models.Evento
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.ui.components.SolicitudCard
@@ -20,10 +20,10 @@ import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 
 @Composable
 fun SolicitudesEventosScreen(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: EventViewModel
 ) {
-    val solicitudes = viewModel.solicitudes
+    val solicitudes by viewModel.solicitudes.collectAsState()
 
     Scaffold(
         topBar = {

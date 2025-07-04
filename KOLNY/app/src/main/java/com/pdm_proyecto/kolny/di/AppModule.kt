@@ -1,5 +1,6 @@
 package com.pdm_proyecto.kolny.di
 
+import com.pdm_proyecto.kolny.data.repository.EventoRepository
 import com.pdm_proyecto.kolny.data.repository.UsuarioRepository
 import com.pdm_proyecto.kolny.data.repository.VisitaRepository
 import dagger.Module
@@ -22,5 +23,11 @@ object AppModule {
     @Singleton
     fun provideVisitaRepository(): VisitaRepository {
         return VisitaRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEventRepository(): EventoRepository {
+        return EventoRepository()
     }
 }

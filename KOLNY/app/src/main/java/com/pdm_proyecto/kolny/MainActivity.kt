@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
 import com.pdm_proyecto.kolny.ui.navigation.admin.AdminNavigation
+import com.pdm_proyecto.kolny.ui.navigation.residente.ResidenteNavigation
+import com.pdm_proyecto.kolny.ui.navigation.vigilante.VigilanteNavigation
 import com.pdm_proyecto.kolny.ui.theme.KOLNYTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -13,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 //ESTA ASÍ PARA PRUEBAS
 //Navigation MUY básica
 @AndroidEntryPoint
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +22,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             KOLNYTheme {
                 val navController = rememberNavController()
-                AdminNavigation(navController = navController)
+                //AdminNavigation(navController = navController)
+                //VigilanteNavigation(navController = navController)
+                ResidenteNavigation(navController = navController)
             }
         }
     }

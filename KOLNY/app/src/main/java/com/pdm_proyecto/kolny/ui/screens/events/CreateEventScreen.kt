@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.data.models.Evento
 import com.pdm_proyecto.kolny.data.models.Usuario
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
@@ -22,12 +23,12 @@ import java.util.*
 fun CreateEventScreen(
     rol: String,
     viewModel: EventViewModel,
-    navController: NavController,
+    navController: NavHostController,
     onEventoGuardado: () -> Unit,
     usuario: Usuario //IMPORTANTE, AQUÍ VA A IR EL USUARIO QUE ESTE LOGGEADO
 ) {
     val context = LocalContext.current
-    val eventoSeleccionado = viewModel.eventoSeleccionado
+    val eventoSeleccionado by viewModel.eventoSeleccionado.collectAsState()
 
     var titulo by remember { mutableStateOf(eventoSeleccionado?.titulo ?: "") }
     var descripcion by remember { mutableStateOf(eventoSeleccionado?.descripcion ?: "") }
@@ -157,7 +158,7 @@ fun CreateEventScreen(
 
                     if (rol == "ADMIN") {
                         if (eventoSeleccionado != null) {
-                            viewModel.actualizarEvento(evento.copy(id = eventoSeleccionado.id))
+                            viewModel.actualizarEvento(evento.copy(id = eventoSeleccionado!!.id))
                         } else {
                             viewModel.agregarEvento(evento)
                         }

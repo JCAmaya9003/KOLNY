@@ -1,149 +1,91 @@
 package com.pdm_proyecto.kolny.viewmodels
 
-
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pdm_proyecto.kolny.data.models.Evento
-import java.util.*
+import com.pdm_proyecto.kolny.data.repository.EventoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class EventViewModel : ViewModel() {
+@HiltViewModel
+class EventViewModel @Inject constructor(
+    private val repository: EventoRepository
+) : ViewModel() {
 
-    var eventoSeleccionado by mutableStateOf<Evento?>(null)
-        private set
+    private val _eventos = MutableStateFlow<List<Evento>>(emptyList())
+    val eventos: StateFlow<List<Evento>> = _eventos
 
-    private val _eventos = mutableStateListOf<Evento>()
-    val eventos: List<Evento> = _eventos
+    private val _solicitudes = MutableStateFlow<List<Evento>>(emptyList())
+    val solicitudes: StateFlow<List<Evento>> = _solicitudes
 
-    private val _solicitudes = mutableStateListOf<Evento>()
-    val solicitudes: List<Evento> = _solicitudes
+    private val _eventoSeleccionado = MutableStateFlow<Evento?>(null)
+    val eventoSeleccionado: StateFlow<Evento?> = _eventoSeleccionado
 
     init {
-
-        enviarSolicitud(
-            Evento(
-                id = generarId(),
-                titulo = "Torneo de fútbol",
-                descripcion = "Competencia entre colonias",
-                lugar = "Cancha principal",
-                fecha = "2025-07-05",
-                horaInicio = "08:00",
-                horaFin = "12:00",
-                creadoPor = "Carlos Gómez"
-            )
-        )
-
-        enviarSolicitud(
-            Evento(
-                id = generarId(),
-                titulo = "Clase de yoga",
-                descripcion = "Clase al aire libre para adultos",
-                lugar = "Parque central",
-                fecha = "2025-07-06",
-                horaInicio = "07:00",
-                horaFin = "08:00",
-                creadoPor = "Ana Ramos"
-            )
-        )
-
-        agregarEvento(
-            Evento(
-                titulo = "Reunión de vecinos",
-                descripcion = "Discusión sobre seguridad y mejoras",
-                lugar = "Casa comunal",
-                fecha = "2025-06-20",
-                horaInicio = "18:00",
-                horaFin = "19:30",
-                creadoPor = "admin"
-            )
-        )
-        agregarEvento(
-            Evento(
-                titulo = "Tarde de juegos",
-                descripcion = "Juegos para niños en la cancha",
-                lugar = "Cancha principal",
-                fecha = "2025-06-21",
-                horaInicio = "15:00",
-                horaFin = "17:00",
-                creadoPor = "admin"
-            )
-        )
+        loadEventos()
     }
 
-
+    fun loadEventos() {
+        viewModelScope.launch {
+            _eventos.value = repository.getEventos().toList()
+            _solicitudes.value = repository.getSolicitudes().toList()
+        }
+    }
 
     fun agregarEvento(evento: Evento) {
-        val idAsignado = if (evento.id == 0) generarId() else evento.id
-        _eventos.add(evento.copy(id = idAsignado, aprobado = true))
+        viewModelScope.launch {
+            _eventos.value = repository.agregarEvento(evento).toList()
+        }
     }
-
 
     fun enviarSolicitud(evento: Evento) {
-        val idAsignado = if (evento.id == 0) generarId() else evento.id
-        _solicitudes.add(evento.copy(id = idAsignado, aprobado = false))
+        viewModelScope.launch {
+            _solicitudes.value = repository.enviarSolicitud(evento).toList()
+        }
     }
 
-    fun eliminarEvento(eventoId: Int) {
-        _eventos.removeIf { it.id == eventoId }
+    fun aprobarSolicitud(evento: Evento) {
+        viewModelScope.launch {
+            _solicitudes.value = repository.eliminarSolicitud(evento.id).toList()
+            _eventos.value = repository.aprobarSolicitud(evento).toList()
+        }
     }
 
-    fun actualizarEvento(eventoActualizado: Evento) {
-        val index = _eventos.indexOfFirst { it.id == eventoActualizado.id }
-        if (index != -1) {
-            _eventos[index] = eventoActualizado
+    fun eliminarEvento(id: Int) {
+        viewModelScope.launch {
+            _eventos.value = repository.eliminarEvento(id).toList()
+        }
+    }
+
+    fun actualizarEvento(evento: Evento) {
+        viewModelScope.launch {
+            _eventos.value = repository.actualizarEvento(evento).toList()
+        }
+    }
+
+    fun eliminarSolicitud(id: Int) {
+        viewModelScope.launch {
+            _solicitudes.value = repository.eliminarSolicitud(id).toList()
         }
     }
 
     fun obtenerEventosPorFecha(fecha: String): List<Evento> {
-        return _eventos.filter { it.fecha == fecha }
-    }
-
-    fun aprobarSolicitud(evento: Evento) {
-        val eventoAprobado = evento.copy(aprobado = true)
-        eliminarSolicitud(evento.id)
-        agregarEvento(eventoAprobado)
-    }
-
-    fun eliminarSolicitud(eventoId: Int) {
-        _solicitudes.removeIf { it.id == eventoId }
+        return repository.obtenerEventosPorFecha(fecha)
     }
 
     fun seleccionarEvento(evento: Evento) {
-        eventoSeleccionado = evento
+        _eventoSeleccionado.value = evento
     }
 
     fun limpiarEventoSeleccionado() {
-        eventoSeleccionado = null
-    }
-
-    fun obtenerSolicitudes(): List<Evento> {
-        return solicitudes
+        _eventoSeleccionado.value = null
     }
 
     fun existeTraslapeDeEvento(fecha: String, horaInicio: String, horaFin: String): Boolean {
-        return eventos.any { evento ->
-
-            if (eventoSeleccionado != null && evento.id == eventoSeleccionado!!.id) {
-                return@any false
-            }
-
-            if (evento.fecha != fecha) return@any false
-
-            val inicioConflicto = horaInicio < evento.horaFin
-            val finConflicto = horaFin > evento.horaInicio
-
-            inicioConflicto && finConflicto
-        }
+        val idIgnorado = _eventoSeleccionado.value?.id
+        return repository.existeTraslape(fecha, horaInicio, horaFin, idIgnorado)
     }
-
-
-    private fun generarId(): Int {
-        var nuevoId = 1
-        val idsExistentes = (_eventos.map { it.id } + _solicitudes.map { it.id }).toSet()
-        while (idsExistentes.contains(nuevoId)) {
-            nuevoId++
-        }
-        return nuevoId
-    }
-
-
 }

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.pdm_proyecto.kolny.ui.components.KolnyTopBar
 import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.data.models.Evento
@@ -26,16 +27,21 @@ import java.util.*
 fun EventScreen(
     rol: String,
     viewModel: EventViewModel,
-    navController: NavController,
+    navController: NavHostController,
     onNavigateToCreate: () -> Unit
 ) {
-    var fechaSeleccionada by remember { mutableStateOf("") }
-    val eventos = if (fechaSeleccionada.isNotEmpty())
-        viewModel.obtenerEventosPorFecha(fechaSeleccionada)
-    else
-        viewModel.eventos
+    val eventos by viewModel.eventos.collectAsState()
+    val solicitudes by viewModel.solicitudes.collectAsState()
 
-    val solicitudesPendientesCount = viewModel.solicitudes.size
+    var fechaSeleccionada by remember { mutableStateOf("") }
+    val eventosFiltrados = if (fechaSeleccionada.isNotEmpty()) {
+        viewModel.obtenerEventosPorFecha(fechaSeleccionada)
+    }
+    else {
+        eventos
+    }
+
+    val solicitudesPendientesCount = solicitudes.size
 
     val contexto = LocalContext.current
     val calendario = Calendar.getInstance()
@@ -78,8 +84,16 @@ fun EventScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Button(onClick = { datePicker.show() }) {
-                        Text("Seleccionar fecha")
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ){
+                        Button(onClick = { datePicker.show() }) {
+                            Text("Seleccionar fecha")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(onClick = { fechaSeleccionada = "" }) {
+                            Text("Todas las fechas")
+                        }
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(text = if (fechaSeleccionada.isNotEmpty()) fechaSeleccionada else "Todas las fechas")
@@ -125,7 +139,7 @@ fun EventScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn {
-                items(eventos) { evento ->
+                items(eventosFiltrados) { evento ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

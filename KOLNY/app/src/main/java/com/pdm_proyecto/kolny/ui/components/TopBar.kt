@@ -93,7 +93,7 @@ fun KolnyTopBar(
                 when (rol) {
                     "ADMIN" -> {
                         IconButton(onClick = {
-                            navController.navigate(Route.GestionUsers.route)
+                            navController.navigate(Route.AdminHome.route)
                         }) {
                             Icon(Icons.Default.Person, contentDescription = "Usuarios")
                         }
