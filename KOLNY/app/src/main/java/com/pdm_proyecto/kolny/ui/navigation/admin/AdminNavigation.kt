@@ -34,10 +34,12 @@ fun NavGraphBuilder.AdminNavigation(
     )
     AdminEventNavigationEntries(
         navController = navController,
-        eventViewModel = eventViewModel
+        eventViewModel = eventViewModel,
+        usuarioViewModel = usuarioViewModel
     )
     AdminNoticiaNavigationEntries(
         navController = navController,
-        noticiaViewModel = noticiaViewModel
+        noticiaViewModel = noticiaViewModel,
+        usuarioViewModel = usuarioViewModel
     )
 }

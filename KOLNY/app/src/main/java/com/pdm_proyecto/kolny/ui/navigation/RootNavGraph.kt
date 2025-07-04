@@ -30,7 +30,6 @@ fun RootNavGraph(navController: NavHostController) {
     val eventViewModel: EventViewModel = hiltViewModel()
     val noticiaViewModel: NoticiaViewModel = hiltViewModel()
 
-
     NavHost(
         navController = navController,
         startDestination = Route.Login.route
@@ -70,7 +69,8 @@ fun RootNavGraph(navController: NavHostController) {
                         ResultadoAcceso.Desconocido -> toast(ctx, "Error desconocido")
                         is ResultadoAcceso.ErrorBd -> TODO()
                     }
-                }
+                },
+                usuarioViewModel = usuarioViewModel
             )
         }
 
@@ -83,18 +83,20 @@ fun RootNavGraph(navController: NavHostController) {
             noticiaViewModel = noticiaViewModel
         )
 
-        /*VigilanteNavigation(
+        VigilanteNavigation(
             navController = navController,
             visitaViewModel = visitaViewModel,
             noticiaViewModel = noticiaViewModel,
-            eventViewModel = eventViewModel
+            eventViewModel = eventViewModel,
+            usuarioViewModel = usuarioViewModel
         )
 
         ResidenteNavigation(
             navController = navController,
             noticiaViewModel = noticiaViewModel,
-            eventViewModel = eventViewModel
-        )*/
+            eventViewModel = eventViewModel,
+            usuarioViewModel = usuarioViewModel
+        )
     }
 }
 
