@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.pdm_proyecto.kolny.ui.navigation.Route
 import com.pdm_proyecto.kolny.ui.screens.admin.AdminScreen
+import com.pdm_proyecto.kolny.viewmodels.EventViewModel
 import com.pdm_proyecto.kolny.viewmodels.UsuarioViewModel
 import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 

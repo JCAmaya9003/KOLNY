@@ -1,5 +1,6 @@
 package com.pdm_proyecto.kolny.di
 
+import com.pdm_proyecto.kolny.data.repository.EventoRepository
 import android.content.Context
 import androidx.lifecycle.ViewModel
 //import com.google.android.gms.auth.api.signin.internal.Storage
@@ -54,5 +55,11 @@ object AppModule {
     @Singleton
     fun provideVisitaRepository(): VisitaRepository {
         return VisitaRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideEventRepository(): EventoRepository {
+        return EventoRepository()
     }
 }
