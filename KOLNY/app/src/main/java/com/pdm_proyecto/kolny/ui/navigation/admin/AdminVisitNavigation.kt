@@ -1,51 +1,43 @@
-package com.pdm_proyecto.kolny.ui.navigation
+package com.pdm_proyecto.kolny.ui.navigation.admin
 
 import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.pdm_proyecto.kolny.ui.navigation.Route
 import com.pdm_proyecto.kolny.ui.screens.visit.AddVisitScreen
 import com.pdm_proyecto.kolny.ui.screens.visit.EditVisitScreen
 import com.pdm_proyecto.kolny.ui.screens.visit.VisitScreen
 import com.pdm_proyecto.kolny.viewmodels.VisitaViewModel
 
-fun NavGraphBuilder.VisitNavigationEntries(
+fun NavGraphBuilder.AdminVisitNavigationEntries(
     navController: NavHostController,
-    rol: String,
-    visitViewModel: VisitaViewModel
-) {
-    composable("visitScreen") {
+    visitaViewModel: VisitaViewModel
+){
+    composable(Route.Visitas.route) {
         VisitScreen(
-            rol = rol,
-            viewModel = visitViewModel,
+            rol = "ADMIN",
+            viewModel = visitaViewModel,
             navController = navController,
-            onAddVisit = { navController.navigate("addVisitScreen") },
+            onAddVisit = {},
             onEditVisit = {
-                visitViewModel.selectVisita(it)
-                navController.navigate("editVisitScreen")
+                visitaViewModel.selectVisita(it)
+                navController.navigate(Route.EditVisita.route)
             }
         )
     }
 
-    composable("addVisitScreen") {
-        AddVisitScreen(
-            rol = rol,
-            viewModel = visitViewModel,
-            navController = navController
-        )
-    }
-
-    composable("editVisitScreen") {
-        val visita = visitViewModel.selectedVisita.collectAsState().value
+    composable(Route.EditVisita.route) {
+        val visita = visitaViewModel.selectedVisita.collectAsState().value
         if (visita != null) {
             EditVisitScreen(
-                rol = rol,
-                viewModel = visitViewModel,
+                rol = "ADMIN",
+                viewModel = visitaViewModel,
                 navController = navController,
                 visita = visita,
                 onDone = {
-                    visitViewModel.clearSelectedVisita()
+                    visitaViewModel.clearSelectedVisita()
                     navController.popBackStack()
                 }
             )
